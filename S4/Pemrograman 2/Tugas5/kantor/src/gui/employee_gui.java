@@ -35,8 +35,8 @@ public class employee_gui extends javax.swing.JFrame {
     public employee_gui() {
         initComponents();        
         addDept(cb_dept);
-        displayTable();
         removeTable(tabel_show_emp);
+        displayTable();
         AutoCompleteDecorator.decorate(cb_dept);
         initMethod();
     }

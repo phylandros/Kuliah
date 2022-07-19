@@ -8,9 +8,9 @@ const NavigationBar = () => {
         <Container>
           <Navbar.Brand>BGES WITEL BEKASI</Navbar.Brand>
           <Nav>
-            <Nav.Link to="/">Home</Nav.Link>
-            <Nav.Link to="/About">About</Nav.Link>
-            <Nav.Link to="/ContactUs">Contact Us</Nav.Link>
+            <Nav.Link>Home</Nav.Link>
+            <Nav.Link>About</Nav.Link>
+            <Nav.Link>Contact Us</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
