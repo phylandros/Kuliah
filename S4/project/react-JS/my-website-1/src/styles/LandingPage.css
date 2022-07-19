@@ -1,0 +1,5 @@
+.mybg{
+    height: 210vh;
+    background-image: url(/src/assets/main.jpg);
+    background-size: cover;
+}
