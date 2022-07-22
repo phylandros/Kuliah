@@ -11,43 +11,52 @@ import React from "react";
 
 const NavigationBar = () => {
   return (
-    <div className="bg-dark">
-      <Navbar variant="dark">
-        <Container fluid>
-          <Navbar.Brand>BGES WITEL BEKASI</Navbar.Brand>
-
+    <Navbar bg="dark" variant="dark">
+      <Container fluid>
+        <Navbar.Brand href="#home">BGES WITEL BEKASI</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="#home">Home</Nav.Link>
+          <Nav.Link href="#about">About</Nav.Link>
+          <Nav.Link href="#contact_us">Contact Us</Nav.Link>
+        </Nav>
+        <div>
           <Form>
-            <Row>
-              <Col>
-                <Nav>
-                  <Nav.Link className="m-2">Home</Nav.Link>
-                  <Nav.Link className="m-2">About</Nav.Link>
-                  <Nav.Link className="m-2">Contact Us</Nav.Link>
-                  <Form.Group className="m-2" controlId="formBasicUsername">
-                    <Form.Control
-                      type="username"
-                      placeholder="Enter Username"
-                    />
-                  </Form.Group>
-                  <Form.Group className="m-2" controlId="formBasicPassword">
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter password"
-                    />
-                  </Form.Group>
-                  <Button className="m-2" variant="primary">
-                    Login
-                  </Button>
-                  {/* <Button className="m-2" variant="secondary">
-                    Sign Up
-                  </Button> */}
-                </Nav>
+            <Row className="align-items-center">
+              <Col className="my-1">
+                <Form.Label htmlFor="inlineFormInputGroupUsername" visuallyHidden>
+                  Username
+                </Form.Label>
+                <Form.Control
+                  id="inlineFormInputGroupUsername"
+                  placeholder="Username"
+                />
+              </Col>
+              <Col className="my-1">
+                <Form.Label htmlFor="inlineFormInputGroupPassword" visuallyHidden>
+                  Password
+                </Form.Label>
+                <Form.Control
+                  id="inlineFormInputGroupPassword"
+                  placeholder="Password"
+                />
+              </Col>
+              {/* <Col xs="auto" className="my-1">
+                <Form.Check
+                  type="checkbox"
+                  id="autoSizingCheck2"
+                  label="Remember me"
+                />
+              </Col> */}
+              <Col xs="auto" className="my-1">
+                <Button type="Login">Login</Button>
               </Col>
             </Row>
           </Form>
-        </Container>
-      </Navbar>
-    </div>
+        </div>
+      </Container>
+    </Navbar>
+
+
   );
 };
 

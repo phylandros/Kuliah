@@ -8,34 +8,27 @@ const FormPelaporan = () => {
     <Form>
       <Row className="mb-3">
         <Form.Group as={Col} controlId="formGridFirstname">
-          <Form.Label>First Name</Form.Label>
-          <Form.Control type="FirstName" placeholder="First Name" />
+          <Form.Label>Nama Depan</Form.Label>
+          <Form.Control type="FirstName" placeholder="Nama Depan" />
         </Form.Group>
 
         <Form.Group as={Col} controlId="formGridLastName">
-          <Form.Label>Last Name</Form.Label>
-          <Form.Control type="LastName" placeholder="Last Name" />
+          <Form.Label>Nama Belakang</Form.Label>
+          <Form.Control type="LastName" placeholder="Nama Belakang" />
         </Form.Group>
       </Row>
-
       <Form.Group className="mb-3" controlId="formGridAddress1">
-        <Form.Label>Address</Form.Label>
-        <Form.Control placeholder="1234 Main St" />
+        <Form.Label>Alamat</Form.Label>
+        <Form.Control placeholder="Jl. Ir. Juanda" />
       </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formGridAddress2">
-        <Form.Label>Address 2</Form.Label>
-        <Form.Control placeholder="Apartment, studio, or floor" />
-      </Form.Group>
-
       <Row className="mb-3">
         <Form.Group as={Col} controlId="formGridCity">
-          <Form.Label>City</Form.Label>
+          <Form.Label>Kota</Form.Label>
           <Form.Control />
         </Form.Group>
 
         <Form.Group as={Col} controlId="formGridState">
-          <Form.Label>State</Form.Label>
+          <Form.Label>Provinsi</Form.Label>
           <Form.Select defaultValue="Choose...">
             <option>Choose</option>
             <option>Aceh</option>
@@ -75,15 +68,15 @@ const FormPelaporan = () => {
         </Form.Group>
 
         <Form.Group as={Col} controlId="formGridZip">
-          <Form.Label>Zip</Form.Label>
+          <Form.Label>Kode Pos</Form.Label>
           <Form.Control />
         </Form.Group>
       </Row>
 
-      <Form.Group className="mb-3" id="formGridCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
+      <Form.Group className="mb-3" controlId="exampleForm.ControlKeluhan">
+        <Form.Label>Keluhan Layanan</Form.Label>
+        <Form.Control as="textarea" rows={3} />
       </Form.Group>
-
       <Button variant="primary" type="submit">
         Submit
       </Button>
