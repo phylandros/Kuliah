@@ -4,16 +4,21 @@
  */
 package gui;
 
+import controller.koneksi;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
+import java.sql.*;
+import javax.swing.JOptionPane;
 /**
  *
  * @author ariya
  */
-public class login extends javax.swing.JFrame {
+public class login extends javax.swing.JFrame {    
 
+    ResultSet rs;
+    Statement stmt;
     /**
      * Creates new form login
      */
@@ -44,9 +49,9 @@ public class login extends javax.swing.JFrame {
         inp_password = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        bt_login = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        bt_daftar = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -113,33 +118,38 @@ public class login extends javax.swing.JFrame {
         jLabel2.setText("PERPUSTAKAAN");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, 230, -1));
 
-        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        bt_login.setBackground(new java.awt.Color(102, 102, 102));
+        bt_login.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        bt_login.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel2MouseClicked(evt);
+                bt_loginMouseClicked(evt);
             }
         });
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_login.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setBackground(new java.awt.Color(102, 102, 102));
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Login");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 30));
+        bt_login.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 30));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 200, 100, 30));
+        jPanel1.add(bt_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 200, 100, 30));
 
-        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_daftar.setBackground(new java.awt.Color(102, 102, 102));
+        bt_daftar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        bt_daftar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_daftarMouseClicked(evt);
+            }
+        });
+        bt_daftar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Sign Up");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 30));
+        bt_daftar.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 30));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, 100, 30));
+        jPanel1.add(bt_daftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, 100, 30));
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\ariya\\Documents\\NetBeansProjects\\ProjectUAS\\src\\assets\\icons8_administrator_male_20px.png")); // NOI18N
@@ -187,11 +197,33 @@ public class login extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+    private void bt_loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_loginMouseClicked
+        // TODO add your handling code here:
+        try{
+            koneksi con = new koneksi();
+            String username = inp_username.getText();
+            String password = new String(inp_password.getPassword());
+            String sql = "SELECT * FROM account WHERE username='"+username+"' AND password='"+password+"'";
+            rs = con.lihatData(sql);
+            if(rs.next()){
+                this.dispose();
+                new dashboard().setVisible(true);
+                String sql2 = "UPDATE `account` SET `status_login`='1' WHERE username='"+username+"'";
+                con.dmlData(sql2);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Username / Password Salah, Silahkan Cek Kembali");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,"Error : "+e);
+        }
+    }//GEN-LAST:event_bt_loginMouseClicked
+
+    private void bt_daftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_daftarMouseClicked
         // TODO add your handling code here:
         this.dispose();
-        new dashboard().setVisible(true);
-    }//GEN-LAST:event_jPanel2MouseClicked
+        new daftar().setVisible(true);
+    }//GEN-LAST:event_bt_daftarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -229,6 +261,8 @@ public class login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bt_daftar;
+    private javax.swing.JPanel bt_login;
     private javax.swing.JPasswordField inp_password;
     private javax.swing.JTextField inp_username;
     private javax.swing.JDesktopPane jDesktopPane1;
@@ -240,8 +274,6 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     // End of variables declaration//GEN-END:variables
