@@ -1,6 +1,6 @@
-import CardProduct from "./CardProduct";
-import FormPelaporan from "./FormPelaporan";
-import Introduction from "./Introduction";
+import CardProduct from "../components/CardProduct";
+// import FormPelaporan from "../components/FormPelaporan";
+import Introduction from "../components/Introduction";
 
 const Main = () => {
   return (
@@ -15,7 +15,7 @@ const Main = () => {
         <div>
           <CardProduct />
         </div>
-        <div className="row">
+        {/* <div className="row">
           <div className="col-12 text-center my-5">
             <h1>Pelaporan</h1>
           </div>
@@ -24,7 +24,7 @@ const Main = () => {
           <div className="col-4 m-md-2">
             <FormPelaporan />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

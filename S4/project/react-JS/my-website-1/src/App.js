@@ -1,18 +1,22 @@
 import "./App.css";
 import Footer from "./components/Footer";
-import Main from "./components/Main";
+import Main from "./view/Main";
 import NavigationBar from "./components/NavigationBar";
 import "./styles/LandingPage.css";
+import Router from "./router";
 
 function App() {
   return (
-    <div>
-      <div className="mybg">
-        <NavigationBar />
-        <Main />
-        <Footer />
-      </div>
-    </div>
+    <Router />
+
+    // <div>
+    //   <div className="mybg">
+    //     <NavigationBar />
+    //     <Router />
+    //     <Main />
+    //     <Footer />
+    //   </div>
+    // </div>
   );
 }
 

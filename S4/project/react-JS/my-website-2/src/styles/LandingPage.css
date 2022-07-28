@@ -1,0 +1,6 @@
+.mybg{
+    height: 100%;
+    background-image: url(/src/assets/main.jpg);
+    background-size: cover;
+    
+}

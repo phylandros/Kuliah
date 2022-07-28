@@ -13,11 +13,12 @@ const NavigationBar = () => {
   return (
     <Navbar bg="dark" variant="dark">
       <Container fluid>
-        <Navbar.Brand to="/home">BGES WITEL BEKASI</Navbar.Brand>
+        <Navbar.Brand href="/">BGES WITEL BEKASI</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link to="/home">Home</Nav.Link>
-          <Nav.Link to="/about">About</Nav.Link>
-          <Nav.Link to="/contact_us">Contact Us</Nav.Link>
+          <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/about">About</Nav.Link>
+          <Nav.Link href="/contact_us">Contact Us</Nav.Link>
+          <Nav.Link href="/barchart">BarChart</Nav.Link>
         </Nav>
         <div>
           <Form>
@@ -51,6 +52,7 @@ const NavigationBar = () => {
                   type="checkbox"
                   id="autoSizingCheck2"
                   label="Remember me"
+                  className="primary"
                 />
               </Col> */}
               <Col xs="auto" className="my-1">
