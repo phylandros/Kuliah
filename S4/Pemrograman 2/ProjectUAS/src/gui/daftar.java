@@ -4,12 +4,19 @@
  */
 package gui;
 
+import controller.koneksi;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 /**
  *
  * @author ariya
  */
 public class daftar extends javax.swing.JFrame {
+    ResultSet rs;
+    Statement stmt;
 
+    
     /**
      * Creates new form daftar
      */
@@ -33,7 +40,6 @@ public class daftar extends javax.swing.JFrame {
         inp_npm = new javax.swing.JTextField();
         inp_nama = new javax.swing.JTextField();
         inp_username = new javax.swing.JTextField();
-        inp_password = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -46,6 +52,7 @@ public class daftar extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
+        inp_password = new javax.swing.JPasswordField();
 
         jTextField2.setText("jTextField2");
 
@@ -81,12 +88,6 @@ public class daftar extends javax.swing.JFrame {
         inp_username.setForeground(new java.awt.Color(255, 255, 255));
         inp_username.setBorder(null);
         jPanel1.add(inp_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 190, -1));
-
-        inp_password.setBackground(new java.awt.Color(102, 102, 102));
-        inp_password.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        inp_password.setForeground(new java.awt.Color(255, 255, 255));
-        inp_password.setBorder(null);
-        jPanel1.add(inp_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 190, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -128,6 +129,11 @@ public class daftar extends javax.swing.JFrame {
         bt_daftar.setBackground(new java.awt.Color(102, 102, 102));
         bt_daftar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         bt_daftar.setForeground(new java.awt.Color(255, 255, 255));
+        bt_daftar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_daftarMouseClicked(evt);
+            }
+        });
         bt_daftar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -141,6 +147,11 @@ public class daftar extends javax.swing.JFrame {
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 190, 10));
         jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 190, 10));
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 190, 10));
+
+        inp_password.setBackground(new java.awt.Color(102, 102, 102));
+        inp_password.setForeground(new java.awt.Color(255, 255, 255));
+        inp_password.setBorder(null);
+        jPanel1.add(inp_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 190, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -166,6 +177,28 @@ public class daftar extends javax.swing.JFrame {
         this.dispose();
         new login().setVisible(true);
     }//GEN-LAST:event_bt_backdaftarMouseClicked
+
+    private void bt_daftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_daftarMouseClicked
+        // TODO add your handling code here:
+        try{
+            koneksi con = new koneksi();
+        
+        String npm = inp_npm.getText();
+        String nama = inp_nama.getText();
+        String username = inp_username.getText();
+        String password = new String(inp_password.getPassword());
+        String sql = "INSERT INTO `account` (`npm`, `nama`, `username`, `password`, `status_login`) VALUES ('"+npm+"', '"+nama+"', '"+username+"', '"+password+"', '0');";
+        con.dmlData(sql);     
+        
+        inp_npm.setText("");
+        inp_nama.setText("");
+        inp_username.setText("");
+        inp_password.setText("");
+        
+        } catch(Exception e){
+            System.out.println("Error : " +e);
+        }
+    }//GEN-LAST:event_bt_daftarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -207,7 +240,7 @@ public class daftar extends javax.swing.JFrame {
     private javax.swing.JPanel bt_daftar;
     private javax.swing.JTextField inp_nama;
     private javax.swing.JTextField inp_npm;
-    private javax.swing.JTextField inp_password;
+    private javax.swing.JPasswordField inp_password;
     private javax.swing.JTextField inp_username;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
