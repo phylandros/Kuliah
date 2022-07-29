@@ -4,25 +4,25 @@
  */
 package gui;
 
-import java.awt.*;
-
 /**
  *
  * @author ariya
  */
 public class dashboard extends javax.swing.JFrame {
 
+    
+
     /**
      * Creates new form dashboard
      */
     public dashboard() {
         initComponents();
-        panel_table.show();
-        panel_input.hide();
-        panel_buku.hide();
+//        panel_table.show();
+//        panel_input.hide();
+//        panel_buku.hide();
         
         
-        tabel_dashboard.getTableHeader().setFont(new Font("Segeou UI",Font.PLAIN, 14));
+//        tabel_dashboard.getTableHeader().setFont(new Font("Segeou UI",Font.PLAIN, 14));
 
 //        tabel_dashboard.getTableHeader().setBackground(new Color(102,102,102));
     }
@@ -56,27 +56,13 @@ public class dashboard extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        panel_table = new javax.swing.JPanel();
-        tabelScroll_1 = new javax.swing.JScrollPane();
-        tabel_dashboard = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        panel_input = new javax.swing.JPanel();
+        panel_dashboard = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        panel_buku = new javax.swing.JPanel();
-        tabelScroll_2 = new javax.swing.JScrollPane();
-        tabel_dashboard1 = new javax.swing.JTable();
-        jLabel10 = new javax.swing.JLabel();
+        chart = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
 
         jRadioButtonMenuItem1.setSelected(true);
         jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
@@ -205,178 +191,60 @@ public class dashboard extends javax.swing.JFrame {
 
         jPanel1.add(panel_header, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, 820, 200));
 
-        panel_table.setBackground(new java.awt.Color(255, 255, 255));
-        panel_table.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_dashboard.setBackground(new java.awt.Color(255, 255, 255));
+        panel_dashboard.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tabelScroll_1.setBackground(new java.awt.Color(255, 255, 255));
-        tabelScroll_1.setBorder(null);
-        tabelScroll_1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        tabelScroll_1.setColumnHeaderView(null);
-        tabelScroll_1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tabelScroll_1.setFocusable(false);
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tabel_dashboard.setAutoCreateRowSorter(true);
-        tabel_dashboard.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"1", "43A87006200xxx", "Aulia", "Python", "19-07-2022", "26-07-2022", null},
-                {"2", "43A87006200xxx", "Abel", "Java", "19-07-2022", "26-07-2022", "Sudah Kembali"},
-                {"3", "43A87006200xxx", "Dwi", "CSS", "19-07-2022", "26-07-2022", null},
-                {"4", "43A87006200xxx", "Azaria", "PHP", "19-07-2022", "26-07-2022", null}
-            },
-            new String [] {
-                "No", "NPM", "Nama", "Buku", "Tgl Pinjam", "Tgl Kembali", "Keterangan"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, false, false
-            };
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_people_30px.png"))); // NOI18N
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, -1, -1));
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tabel_dashboard.setFocusable(false);
-        tabel_dashboard.setGridColor(new java.awt.Color(255, 255, 255));
-        tabel_dashboard.setOpaque(false);
-        tabel_dashboard.setPreferredSize(new java.awt.Dimension(400, 100));
-        tabel_dashboard.setRowHeight(25);
-        tabel_dashboard.setShowGrid(false);
-        tabel_dashboard.getTableHeader().setReorderingAllowed(false);
-        tabel_dashboard.setUpdateSelectionOnSort(false);
-        tabelScroll_1.setViewportView(tabel_dashboard);
-        if (tabel_dashboard.getColumnModel().getColumnCount() > 0) {
-            tabel_dashboard.getColumnModel().getColumn(0).setResizable(false);
-            tabel_dashboard.getColumnModel().getColumn(0).setPreferredWidth(2);
-            tabel_dashboard.getColumnModel().getColumn(2).setResizable(false);
-            tabel_dashboard.getColumnModel().getColumn(2).setPreferredWidth(50);
-            tabel_dashboard.getColumnModel().getColumn(3).setResizable(false);
-            tabel_dashboard.getColumnModel().getColumn(3).setPreferredWidth(50);
-            tabel_dashboard.getColumnModel().getColumn(4).setResizable(false);
-            tabel_dashboard.getColumnModel().getColumn(4).setPreferredWidth(50);
-            tabel_dashboard.getColumnModel().getColumn(5).setPreferredWidth(50);
-            tabel_dashboard.getColumnModel().getColumn(6).setPreferredWidth(50);
-        }
+        panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 270, 50));
 
-        panel_table.add(tabelScroll_1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 790, 360));
+        chart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_dashboard.add(chart, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("DATA PEMINJAMAN BUKU");
-        panel_table.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, -1));
+        jPanel1.add(panel_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
-        jPanel1.add(panel_table, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 790, 420));
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 420, Short.MAX_VALUE)
+        );
 
-        panel_input.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel4.setText("Input Peminjaman Buku");
-        panel_input.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 420, Short.MAX_VALUE)
+        );
 
-        jLabel5.setText("Nama Peminjam");
-        panel_input.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, 20));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
-        jLabel6.setText("Nama Buku");
-        panel_input.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, 20));
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 420, Short.MAX_VALUE)
+        );
 
-        jLabel7.setText("Tanggal Peminjaman");
-        panel_input.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 20));
-
-        jLabel8.setText("Jumlah Hari peminjaman");
-        panel_input.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, -1, 20));
-
-        jTextField1.setText("jTextField1");
-        panel_input.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 170, -1));
-
-        jTextField2.setText("jTextField2");
-        panel_input.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 170, -1));
-
-        jTextField4.setText("jTextField4");
-        panel_input.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 170, -1));
-
-        jButton1.setText("Insert");
-        panel_input.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, -1, -1));
-
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setViewportView(jTable1);
-
-        panel_input.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 17, 420, 400));
-        panel_input.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 150, 170, -1));
-
-        jPanel1.add(panel_input, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 790, 420));
-
-        panel_buku.setBackground(new java.awt.Color(255, 255, 255));
-        panel_buku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        tabelScroll_2.setBackground(new java.awt.Color(255, 255, 255));
-        tabelScroll_2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        tabelScroll_2.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        tabelScroll_2.setColumnHeaderView(null);
-        tabelScroll_2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tabelScroll_2.setFocusable(false);
-
-        tabel_dashboard1.setAutoCreateRowSorter(true);
-        tabel_dashboard1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"1", "43A87006200xxx", "Aulia", "Python", "19-07-2022", "26-07-2022", null},
-                {"2", "43A87006200xxx", "Abel", "Java", "19-07-2022", "26-07-2022", "Sudah Kembali"},
-                {"3", "43A87006200xxx", "Dwi", "CSS", "19-07-2022", "26-07-2022", null},
-                {"4", "43A87006200xxx", "Azaria", "PHP", "19-07-2022", "26-07-2022", null}
-            },
-            new String [] {
-                "No", "NPM", "Nama", "Buku", "Tgl Pinjam", "Tgl Kembali", "Keterangan"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tabel_dashboard1.setFocusable(false);
-        tabel_dashboard1.setGridColor(new java.awt.Color(255, 255, 255));
-        tabel_dashboard1.setOpaque(false);
-        tabel_dashboard1.setPreferredSize(new java.awt.Dimension(400, 100));
-        tabel_dashboard1.setRowHeight(25);
-        tabel_dashboard1.setShowGrid(false);
-        tabel_dashboard1.getTableHeader().setReorderingAllowed(false);
-        tabel_dashboard1.setUpdateSelectionOnSort(false);
-        tabelScroll_2.setViewportView(tabel_dashboard1);
-        if (tabel_dashboard1.getColumnModel().getColumnCount() > 0) {
-            tabel_dashboard1.getColumnModel().getColumn(0).setResizable(false);
-            tabel_dashboard1.getColumnModel().getColumn(0).setPreferredWidth(2);
-            tabel_dashboard1.getColumnModel().getColumn(2).setResizable(false);
-            tabel_dashboard1.getColumnModel().getColumn(2).setPreferredWidth(50);
-            tabel_dashboard1.getColumnModel().getColumn(3).setResizable(false);
-            tabel_dashboard1.getColumnModel().getColumn(3).setPreferredWidth(50);
-            tabel_dashboard1.getColumnModel().getColumn(4).setResizable(false);
-            tabel_dashboard1.getColumnModel().getColumn(4).setPreferredWidth(50);
-            tabel_dashboard1.getColumnModel().getColumn(5).setPreferredWidth(50);
-            tabel_dashboard1.getColumnModel().getColumn(6).setPreferredWidth(50);
-        }
-
-        panel_buku.add(tabelScroll_2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 40, 440, 360));
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Data Peminjaman Buku");
-        panel_buku.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 780, -1));
-
-        jPanel1.add(panel_buku, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 790, 420));
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -400,23 +268,23 @@ public class dashboard extends javax.swing.JFrame {
 
     private void bt_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_dashboardMouseClicked
         // TODO add your handling code here:
-        panel_table.show();
-        panel_input.hide();
-        panel_buku.hide();
+//        panel_table.show();
+//        panel_input.hide();
+//        panel_buku.hide();
     }//GEN-LAST:event_bt_dashboardMouseClicked
 
     private void bt_inp_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_inp_pinjamMouseClicked
         // TODO add your handling code here:
-        panel_table.hide();
-        panel_input.show();
-        panel_buku.hide();
+//        panel_table.hide();
+//        panel_input.show();
+//        panel_buku.hide();
     }//GEN-LAST:event_bt_inp_pinjamMouseClicked
 
     private void bt_inp_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_inp_bukuMouseClicked
         // TODO add your handling code here:
-        panel_table.hide();
-        panel_input.hide();
-        panel_buku.show();
+//        panel_table.hide();
+//        panel_input.hide();
+//        panel_buku.show();
     }//GEN-LAST:event_bt_inp_bukuMouseClicked
 
     /**
@@ -459,11 +327,9 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel bt_inp_buku;
     private javax.swing.JPanel bt_inp_pinjam;
     private javax.swing.JPanel bt_log;
+    private javax.swing.JPanel chart;
     private javax.swing.JLabel image_logo;
-    private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -471,29 +337,17 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel logout;
-    private javax.swing.JPanel panel_buku;
+    private javax.swing.JPanel panel_dashboard;
     private javax.swing.JPanel panel_header;
-    private javax.swing.JPanel panel_input;
     private javax.swing.JPanel panel_menu;
-    private javax.swing.JPanel panel_table;
     private javax.swing.JLabel role;
-    private javax.swing.JScrollPane tabelScroll_1;
-    private javax.swing.JScrollPane tabelScroll_2;
-    private javax.swing.JTable tabel_dashboard;
-    private javax.swing.JTable tabel_dashboard1;
     private javax.swing.JLabel title;
     private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
