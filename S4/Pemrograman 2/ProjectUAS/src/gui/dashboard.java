@@ -59,7 +59,10 @@ public class dashboard extends javax.swing.JFrame {
         panel_dashboard = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        chart = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -198,12 +201,25 @@ public class dashboard extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_people_30px.png"))); // NOI18N
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, -1, -1));
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 270, 50));
+        panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 180, 50));
 
-        chart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        panel_dashboard.add(chart, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
+        jPanel6.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_outbox_30px.png"))); // NOI18N
+        jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        panel_dashboard.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 20, 180, 50));
+
+        jPanel7.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_book_30px.png"))); // NOI18N
+        jPanel7.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        panel_dashboard.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, 180, 50));
 
         jPanel1.add(panel_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
@@ -327,7 +343,6 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel bt_inp_buku;
     private javax.swing.JPanel bt_inp_pinjam;
     private javax.swing.JPanel bt_log;
-    private javax.swing.JPanel chart;
     private javax.swing.JLabel image_logo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -337,11 +352,15 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JLabel logout;
     private javax.swing.JPanel panel_dashboard;
