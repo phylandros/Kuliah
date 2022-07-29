@@ -69,10 +69,10 @@ public class dashboard extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
         panel_buku = new javax.swing.JPanel();
         tabelScroll_2 = new javax.swing.JScrollPane();
         tabel_dashboard1 = new javax.swing.JTable();
@@ -209,14 +209,13 @@ public class dashboard extends javax.swing.JFrame {
         panel_table.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tabelScroll_1.setBackground(new java.awt.Color(255, 255, 255));
-        tabelScroll_1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        tabelScroll_1.setBorder(null);
         tabelScroll_1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         tabelScroll_1.setColumnHeaderView(null);
         tabelScroll_1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tabelScroll_1.setFocusable(false);
 
         tabel_dashboard.setAutoCreateRowSorter(true);
-        tabel_dashboard.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         tabel_dashboard.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", "43A87006200xxx", "Aulia", "Python", "19-07-2022", "26-07-2022", null},
@@ -238,7 +237,6 @@ public class dashboard extends javax.swing.JFrame {
         });
         tabel_dashboard.setFocusable(false);
         tabel_dashboard.setGridColor(new java.awt.Color(255, 255, 255));
-        tabel_dashboard.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_dashboard.setOpaque(false);
         tabel_dashboard.setPreferredSize(new java.awt.Dimension(400, 100));
         tabel_dashboard.setRowHeight(25);
@@ -263,8 +261,8 @@ public class dashboard extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Data Peminjaman Buku");
-        panel_table.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 780, -1));
+        jLabel9.setText("DATA PEMINJAMAN BUKU");
+        panel_table.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, -1));
 
         jPanel1.add(panel_table, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 790, 420));
 
@@ -287,14 +285,13 @@ public class dashboard extends javax.swing.JFrame {
         panel_input.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, -1, 20));
 
         jTextField1.setText("jTextField1");
-        panel_input.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 170, -1));
+        panel_input.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 170, -1));
 
         jTextField2.setText("jTextField2");
-        panel_input.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 170, -1));
+        panel_input.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 170, -1));
 
         jTextField4.setText("jTextField4");
-        panel_input.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, 170, -1));
-        panel_input.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 150, 170, -1));
+        panel_input.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 170, -1));
 
         jButton1.setText("Insert");
         panel_input.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, -1, -1));
@@ -313,10 +310,10 @@ public class dashboard extends javax.swing.JFrame {
             }
         ));
         jTable1.setGridColor(new java.awt.Color(255, 255, 255));
-        jTable1.setIntercellSpacing(new java.awt.Dimension(0, 0));
         jScrollPane1.setViewportView(jTable1);
 
-        panel_input.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 17, 440, 400));
+        panel_input.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 17, 420, 400));
+        panel_input.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 150, 170, -1));
 
         jPanel1.add(panel_input, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, 790, 420));
 
@@ -331,7 +328,6 @@ public class dashboard extends javax.swing.JFrame {
         tabelScroll_2.setFocusable(false);
 
         tabel_dashboard1.setAutoCreateRowSorter(true);
-        tabel_dashboard1.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         tabel_dashboard1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", "43A87006200xxx", "Aulia", "Python", "19-07-2022", "26-07-2022", null},
@@ -353,7 +349,6 @@ public class dashboard extends javax.swing.JFrame {
         });
         tabel_dashboard1.setFocusable(false);
         tabel_dashboard1.setGridColor(new java.awt.Color(255, 255, 255));
-        tabel_dashboard1.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_dashboard1.setOpaque(false);
         tabel_dashboard1.setPreferredSize(new java.awt.Dimension(400, 100));
         tabel_dashboard1.setRowHeight(25);
@@ -466,7 +461,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel bt_log;
     private javax.swing.JLabel image_logo;
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

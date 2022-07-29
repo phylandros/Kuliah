@@ -62,10 +62,10 @@ public class login extends javax.swing.JFrame {
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\ariya\\Documents\\NetBeansProjects\\ProjectUAS\\src\\assets\\icons8_lock_20px.png")); // NOI18N
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, 30, -1));
 
         inp_username.setBackground(new java.awt.Color(102, 102, 102));
@@ -152,7 +152,6 @@ public class login extends javax.swing.JFrame {
         jPanel1.add(bt_daftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, 100, 30));
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\ariya\\Documents\\NetBeansProjects\\ProjectUAS\\src\\assets\\icons8_administrator_male_20px.png")); // NOI18N
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 30, 20));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
