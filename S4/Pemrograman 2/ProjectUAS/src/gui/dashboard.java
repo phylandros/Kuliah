@@ -4,27 +4,98 @@
  */
 package gui;
 
+import controller.koneksi;
+import static gui.login.inp_username;
+import java.awt.Font;
+
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
 /**
  *
  * @author ariya
  */
 public class dashboard extends javax.swing.JFrame {
 
+    String username = inp_username.getText();
+    koneksi con = new koneksi();
+    ResultSet rs;
+    Statement stmt;
+    String kode_buku;
     
+    
+    void tabel_buku(){
 
+        JTableHeader header_buku = tabel_databuku.getTableHeader();
+        header_buku.setFont(new Font("Seqoe UI", Font.BOLD, 13));
+    }
+    
+    
+//    String jumlah_buku = label_jumlahbuku.setText();
+    
+    void removeTable(JTable jt) {
+        DefaultTableModel dt = (DefaultTableModel) jt.getModel();
+        int rowCount = dt.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            dt.removeRow(0);
+        }
+    }
+    
+    void displayTableDataBuku() {
+        removeTable(tabel_databuku);
+        String sql = "SELECT * FROM data_buku";
+        rs = con.lihatData(sql);
+        DefaultTableModel dt = (DefaultTableModel) tabel_databuku.getModel();
+        Object rows[];
+        try {
+            while (rs.next()) {
+                kode_buku = rs.getString("kode_buku");
+                String judul_buku = rs.getString("judul_buku");
+                String penulis = rs.getString("penulis");
+                String tahun_penerbit = rs.getString("tahun_penerbit");
+                
+                rows = new Object[]{kode_buku, judul_buku,penulis, tahun_penerbit};
+                dt.addRow(rows);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }
+    
+    public void bookcount(){
+        String sql = "SELECT COUNT(*) as Jumlah_Buku FROM data_buku;";
+        rs = con.lihatData(sql);
+        try {
+            while(rs.next()){
+                int count = rs.getInt("Jumlah_Buku");
+                label_jumlahbuku.setText(String.valueOf(count));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+        
     /**
      * Creates new form dashboard
      */
     public dashboard() {
         initComponents();
-//        panel_table.show();
-//        panel_input.hide();
-//        panel_buku.hide();
-        
-        
-//        tabel_dashboard.getTableHeader().setFont(new Font("Segeou UI",Font.PLAIN, 14));
-
-//        tabel_dashboard.getTableHeader().setBackground(new Color(102,102,102));
+        bookcount();
+        tabel_buku();
+        removeTable(tabel_databuku);
+        displayTableDataBuku();
+        panel_dashboard.show();
+        panel_databuku.hide();
     }
 
     /**
@@ -41,17 +112,18 @@ public class dashboard extends javax.swing.JFrame {
         panel_menu = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         image_logo = new javax.swing.JLabel();
-        logout = new javax.swing.JLabel();
-        role = new javax.swing.JLabel();
-        username = new javax.swing.JLabel();
-        bt_log = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        bt_dashboard = new javax.swing.JPanel();
+        bt_menu_dashboard = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        bt_inp_pinjam = new javax.swing.JPanel();
+        bt_menu_pinjam = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        bt_inp_buku = new javax.swing.JPanel();
+        bt_menu_buku = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
+        logout = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        bt_menu_pengembalian = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        bt_menu_anggota = new javax.swing.JPanel();
+        label_anggota = new javax.swing.JLabel();
         panel_header = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -59,13 +131,98 @@ public class dashboard extends javax.swing.JFrame {
         panel_dashboard = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        label_pengunjung = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        label_peminjaman = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        label_jumlahbuku = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        bt_next_dashboard = new javax.swing.JLabel();
+        panel_databuku = new javax.swing.JPanel();
+        inp_penulis = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        inp_tahunpenerbit = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabel_databuku = new javax.swing.JTable();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        bt_insert_databuku = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        bt_delete_databuku = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        bt_edit_databuku = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        inp_judulbuku = new javax.swing.JTextField();
+        bt_next_databuku = new javax.swing.JLabel();
+        bt_back_databuku = new javax.swing.JLabel();
+        panel_peminjaman = new javax.swing.JPanel();
+        bt_next_peminjaman = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
+        jLabel31 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jLabel33 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        bt_back_peminjaman = new javax.swing.JLabel();
+        panel_dataanggota = new javax.swing.JPanel();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jTextField6 = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jTextField7 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        bt_next_anggota = new javax.swing.JLabel();
+        bt_back_anggota = new javax.swing.JLabel();
+        panel_datapengembalian = new javax.swing.JPanel();
+        jDateChooser3 = new com.toedter.calendar.JDateChooser();
+        jTextField8 = new javax.swing.JTextField();
+        jTextField9 = new javax.swing.JTextField();
+        jTextField10 = new javax.swing.JTextField();
+        jTextField11 = new javax.swing.JTextField();
+        jTextField12 = new javax.swing.JTextField();
+        jTextField13 = new javax.swing.JTextField();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel42 = new javax.swing.JLabel();
+        jLabel44 = new javax.swing.JLabel();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
+        bt_back_pengembalian = new javax.swing.JLabel();
 
         jRadioButtonMenuItem1.setSelected(true);
         jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
@@ -91,81 +248,120 @@ public class dashboard extends javax.swing.JFrame {
         image_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/logo_kecil.png"))); // NOI18N
         panel_menu.add(image_logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 270, 140));
 
-        logout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        logout.setForeground(new java.awt.Color(255, 255, 255));
-        logout.setText("Logout");
-        panel_menu.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 620, -1, -1));
+        label_username.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label_username.setForeground(new java.awt.Color(255, 255, 255));
+        label_username.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label_username.setText(" ");
+        panel_menu.add(label_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 270, -1));
 
-        role.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        role.setForeground(new java.awt.Color(255, 255, 255));
-        role.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        role.setText("Jabatan");
-        panel_menu.add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 270, -1));
-
-        username.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        username.setForeground(new java.awt.Color(255, 255, 255));
-        username.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        username.setText("Nama Pengguna");
-        panel_menu.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(-1, 220, 270, -1));
-
-        bt_log.setBackground(new java.awt.Color(102, 102, 102));
-        bt_log.setForeground(new java.awt.Color(255, 255, 255));
-        bt_log.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText("Log");
-        bt_log.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-
-        panel_menu.add(bt_log, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 250, 40));
-
-        bt_dashboard.setBackground(new java.awt.Color(102, 102, 102));
-        bt_dashboard.setForeground(new java.awt.Color(255, 255, 255));
-        bt_dashboard.addMouseListener(new java.awt.event.MouseAdapter() {
+        bt_menu_dashboard.setBackground(new java.awt.Color(102, 102, 102));
+        bt_menu_dashboard.setForeground(new java.awt.Color(255, 255, 255));
+        bt_menu_dashboard.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bt_dashboardMouseClicked(evt);
+                bt_menu_dashboardMouseClicked(evt);
             }
         });
-        bt_dashboard.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_menu_dashboard.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_home_page_20px.png"))); // NOI18N
         jLabel12.setText("Dashboard");
-        bt_dashboard.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        bt_menu_dashboard.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_menu.add(bt_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 250, 40));
+        panel_menu.add(bt_menu_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 250, 40));
 
-        bt_inp_pinjam.setBackground(new java.awt.Color(102, 102, 102));
-        bt_inp_pinjam.setForeground(new java.awt.Color(255, 255, 255));
-        bt_inp_pinjam.addMouseListener(new java.awt.event.MouseAdapter() {
+        bt_menu_pinjam.setBackground(new java.awt.Color(102, 102, 102));
+        bt_menu_pinjam.setForeground(new java.awt.Color(255, 255, 255));
+        bt_menu_pinjam.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bt_inp_pinjamMouseClicked(evt);
+                bt_menu_pinjamMouseClicked(evt);
             }
         });
-        bt_inp_pinjam.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_menu_pinjam.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Input Peminjaman");
-        bt_inp_pinjam.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_open_box_20px.png"))); // NOI18N
+        jLabel13.setText("Peminjaman");
+        bt_menu_pinjam.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_menu.add(bt_inp_pinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 250, 40));
+        panel_menu.add(bt_menu_pinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 250, 40));
 
-        bt_inp_buku.setBackground(new java.awt.Color(102, 102, 102));
-        bt_inp_buku.setForeground(new java.awt.Color(255, 255, 255));
-        bt_inp_buku.addMouseListener(new java.awt.event.MouseAdapter() {
+        bt_menu_buku.setBackground(new java.awt.Color(102, 102, 102));
+        bt_menu_buku.setForeground(new java.awt.Color(255, 255, 255));
+        bt_menu_buku.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bt_inp_bukuMouseClicked(evt);
+                bt_menu_bukuMouseClicked(evt);
             }
         });
-        bt_inp_buku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_menu_buku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText("Input Data Buku");
-        bt_inp_buku.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_book_shelf_20px.png"))); // NOI18N
+        jLabel14.setText("Data Buku");
+        bt_menu_buku.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_menu.add(bt_inp_buku, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 250, 40));
+        panel_menu.add(bt_menu_buku, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 250, 40));
+
+        logout.setBackground(new java.awt.Color(102, 102, 102));
+        logout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel18.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_logout_20px.png"))); // NOI18N
+        jLabel18.setText("Logout");
+        jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel18MouseClicked(evt);
+            }
+        });
+        logout.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 30));
+
+        panel_menu.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 610, 80, 30));
+
+        label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label1.setForeground(new java.awt.Color(255, 255, 255));
+        label1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label1.setText("Nama Pengguna");
+        panel_menu.add(label1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 270, -1));
+
+        bt_menu_pengembalian.setBackground(new java.awt.Color(102, 102, 102));
+        bt_menu_pengembalian.setForeground(new java.awt.Color(255, 255, 255));
+        bt_menu_pengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_menu_pengembalianMouseClicked(evt);
+            }
+        });
+        bt_menu_pengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_inbox_20px.png"))); // NOI18N
+        jLabel20.setText("Pengembalian");
+        bt_menu_pengembalian.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        panel_menu.add(bt_menu_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 250, 40));
+
+        bt_menu_anggota.setBackground(new java.awt.Color(102, 102, 102));
+        bt_menu_anggota.setForeground(new java.awt.Color(255, 255, 255));
+        bt_menu_anggota.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_menu_anggotaMouseClicked(evt);
+            }
+        });
+        bt_menu_anggota.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        label_anggota.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        label_anggota.setForeground(new java.awt.Color(255, 255, 255));
+        label_anggota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_people_20px.png"))); // NOI18N
+        label_anggota.setText("Data Anggota");
+        bt_menu_anggota.add(label_anggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        panel_menu.add(bt_menu_anggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 250, 40));
 
         jPanel1.add(panel_menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 270, 660));
 
@@ -203,7 +399,13 @@ public class dashboard extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_people_30px.png"))); // NOI18N
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 180, 50));
+        label_pengunjung.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        label_pengunjung.setForeground(new java.awt.Color(255, 255, 255));
+        label_pengunjung.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label_pengunjung.setText("jLabel19");
+        jPanel2.add(label_pengunjung, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 130, 50));
+
+        panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 180, 50));
 
         jPanel6.setBackground(new java.awt.Color(153, 153, 153));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -211,7 +413,13 @@ public class dashboard extends javax.swing.JFrame {
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_outbox_30px.png"))); // NOI18N
         jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_dashboard.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 20, 180, 50));
+        label_peminjaman.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        label_peminjaman.setForeground(new java.awt.Color(255, 255, 255));
+        label_peminjaman.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label_peminjaman.setText("jLabel19");
+        jPanel6.add(label_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 130, 50));
+
+        panel_dashboard.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 210, 180, 50));
 
         jPanel7.setBackground(new java.awt.Color(153, 153, 153));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -219,48 +427,481 @@ public class dashboard extends javax.swing.JFrame {
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_book_30px.png"))); // NOI18N
         jPanel7.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        panel_dashboard.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, 180, 50));
+        label_jumlahbuku.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        label_jumlahbuku.setForeground(new java.awt.Color(255, 255, 255));
+        label_jumlahbuku.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label_jumlahbuku.setText("jLabel19");
+        jPanel7.add(label_jumlahbuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 130, 50));
+
+        panel_dashboard.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 180, 50));
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setText("Buku Dipinjam");
+        panel_dashboard.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 180, 180, -1));
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel23.setText("Anggota Terdaftar");
+        panel_dashboard.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, -1, -1));
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel24.setText("Jumlah Buku");
+        panel_dashboard.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 180, 180, -1));
+
+        label_dashboard.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        label_dashboard.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label_dashboard.setText("Nama Pengguna");
+        panel_dashboard.add(label_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 800, -1));
+
+        jLabel26.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel26.setText("SELAMAT DATANG");
+        panel_dashboard.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(-4, 40, 800, -1));
+
+        bt_next_dashboard.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_next_dashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_next_page_30px_1.png"))); // NOI18N
+        bt_next_dashboard.setText("Next");
+        bt_next_dashboard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_next_dashboardMouseClicked(evt);
+            }
+        });
+        panel_dashboard.add(bt_next_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, -1));
 
         jPanel1.add(panel_dashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
-        );
+        panel_databuku.setBackground(new java.awt.Color(255, 255, 255));
+        panel_databuku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+        inp_penulis.setBorder(null);
+        panel_databuku.add(inp_penulis, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 140, 20));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
-        );
+        jLabel8.setText("Judul Buku");
+        panel_databuku.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, 20));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+        jLabel9.setText("Tahun Penerbit");
+        panel_databuku.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, 20));
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
-        );
+        inp_tahunpenerbit.setBorder(null);
+        panel_databuku.add(inp_tahunpenerbit, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 140, 20));
 
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jScrollPane1.setToolTipText("");
+        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jScrollPane1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        tabel_databuku.setAutoCreateRowSorter(true);
+        tabel_databuku.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        tabel_databuku.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        tabel_databuku.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Kode Buku", "Judul Buku", "Penulis", "Tahun Penerbit"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tabel_databuku.setToolTipText("");
+        tabel_databuku.setFillsViewportHeight(true);
+        tabel_databuku.setFocusable(false);
+        tabel_databuku.setGridColor(new java.awt.Color(255, 255, 255));
+        tabel_databuku.setRowHeight(30);
+        tabel_databuku.setShowGrid(false);
+        tabel_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_databukuMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabel_databuku);
+        if (tabel_databuku.getColumnModel().getColumnCount() > 0) {
+            tabel_databuku.getColumnModel().getColumn(0).setResizable(false);
+            tabel_databuku.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tabel_databuku.getColumnModel().getColumn(1).setResizable(false);
+            tabel_databuku.getColumnModel().getColumn(1).setPreferredWidth(50);
+            tabel_databuku.getColumnModel().getColumn(2).setResizable(false);
+            tabel_databuku.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tabel_databuku.getColumnModel().getColumn(3).setResizable(false);
+            tabel_databuku.getColumnModel().getColumn(3).setPreferredWidth(20);
+        }
+
+        panel_databuku.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 490, 320));
+
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
+        panel_databuku.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 140, 10));
+
+        jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
+        panel_databuku.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 140, 10));
+
+        bt_insert_databuku.setBackground(new java.awt.Color(255, 255, 255));
+        bt_insert_databuku.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        bt_insert_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_insert_databukuMouseClicked(evt);
+            }
+        });
+        bt_insert_databuku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Insert");
+        bt_insert_databuku.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+
+        panel_databuku.add(bt_insert_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 70, 30));
+
+        bt_delete_databuku.setBackground(new java.awt.Color(255, 255, 255));
+        bt_delete_databuku.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        bt_delete_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_delete_databukuMouseClicked(evt);
+            }
+        });
+        bt_delete_databuku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Delete");
+        bt_delete_databuku.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+
+        panel_databuku.add(bt_delete_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 70, 30));
+
+        bt_edit_databuku.setBackground(new java.awt.Color(255, 255, 255));
+        bt_edit_databuku.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        bt_edit_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_edit_databukuMouseClicked(evt);
+            }
+        });
+        bt_edit_databuku.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Update");
+        bt_edit_databuku.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+
+        panel_databuku.add(bt_edit_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 70, 30));
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setText("DATA BUKU");
+        panel_databuku.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, 490, -1));
+
+        jLabel11.setText("Penulis");
+        panel_databuku.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, 20));
+
+        jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
+        panel_databuku.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 140, 10));
+
+        inp_judulbuku.setBorder(null);
+        panel_databuku.add(inp_judulbuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 49, 140, 20));
+
+        bt_next_databuku.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_next_databuku.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_next_page_30px_1.png"))); // NOI18N
+        bt_next_databuku.setText("Next");
+        bt_next_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_next_databukuMouseClicked(evt);
+            }
+        });
+        panel_databuku.add(bt_next_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, -1));
+
+        bt_back_databuku.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_back_databuku.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_back_to_30px.png"))); // NOI18N
+        bt_back_databuku.setText("Back");
+        bt_back_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_back_databukuMouseClicked(evt);
+            }
+        });
+        panel_databuku.add(bt_back_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, -1, -1));
+
+        jPanel1.add(panel_databuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+
+        panel_peminjaman.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bt_next_peminjaman.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_next_peminjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_next_page_30px_1.png"))); // NOI18N
+        bt_next_peminjaman.setText("Next");
+        bt_next_peminjaman.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_next_peminjamanMouseClicked(evt);
+            }
+        });
+        panel_peminjaman.add(bt_next_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, -1));
+
+        jTextField3.setText("jTextField3");
+        panel_peminjaman.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 130, -1));
+
+        jTextField4.setText("jTextField4");
+        panel_peminjaman.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 130, -1));
+
+        jDateChooser1.setBackground(new java.awt.Color(255, 255, 255));
+        jDateChooser1.setOpaque(false);
+        panel_peminjaman.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 50, 130, -1));
+        panel_peminjaman.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 130, -1));
+
+        jTextField1.setText("jTextField1");
+        panel_peminjaman.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 130, -1));
+
+        jLabel7.setText("Tanggal Pinjam");
+        panel_peminjaman.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+
+        jLabel25.setText("Tanggal Kembali");
+        panel_peminjaman.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
+
+        jLabel27.setText("Kode Buku");
+        panel_peminjaman.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, -1));
+
+        jLabel28.setText("Kode Anggota");
+        panel_peminjaman.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
+
+        jLabel29.setText("Kode Petugas");
+        panel_peminjaman.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Kode Peminjaman", "Tanggal Pinjam", "Tanggal Kembali", "Nama Buku", "Nama Anggota", "Nama Petugas"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+        }
+
+        panel_peminjaman.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 490, 320));
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel31.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel31.setText("Insert");
+        jPanel3.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 70, 30));
+
+        panel_peminjaman.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 70, 30));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel33.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel33.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel33.setText("Update");
+        jPanel4.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+
+        panel_peminjaman.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, 70, 30));
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel34.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel34.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel34.setText("Delete");
+        jPanel5.add(jLabel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+
+        panel_peminjaman.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, 70, 30));
+
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel30.setText("Data Peminjaman");
+        panel_peminjaman.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, 490, -1));
+
+        bt_back_peminjaman.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_back_peminjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_back_to_30px.png"))); // NOI18N
+        bt_back_peminjaman.setText("Back");
+        bt_back_peminjaman.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_back_peminjamanMouseClicked(evt);
+            }
+        });
+        panel_peminjaman.add(bt_back_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, -1, -1));
+
+        jPanel1.add(panel_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+
+        panel_dataanggota.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTextField2.setText("jTextField2");
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+        panel_dataanggota.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(104, 52, -1, -1));
+
+        jTextField5.setText("jTextField5");
+        panel_dataanggota.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(104, 83, -1, -1));
+
+        jRadioButton1.setText("jRadioButton1");
+        panel_dataanggota.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, -1, -1));
+
+        jRadioButton2.setText("jRadioButton2");
+        panel_dataanggota.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 120, -1, -1));
+
+        jTextField6.setText("jTextField6");
+        panel_dataanggota.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 150, -1, -1));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        panel_dataanggota.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, -1, -1));
+
+        jTextField7.setText("jTextField7");
+        panel_dataanggota.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, -1, -1));
+
+        jLabel19.setText("NPM");
+        panel_dataanggota.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, -1));
+
+        jLabel35.setText("Nama");
+        panel_dataanggota.add(jLabel35, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
+
+        jLabel36.setText("Jenis Kelamin");
+        panel_dataanggota.add(jLabel36, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
+
+        jLabel37.setText("Jurusan");
+        panel_dataanggota.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
+
+        jLabel38.setText("Alamat");
+        panel_dataanggota.add(jLabel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, -1, -1));
+
+        jLabel39.setText("No Telpon");
+        panel_dataanggota.add(jLabel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, -1, -1));
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable2);
+
+        panel_dataanggota.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 90, -1, 290));
+
+        bt_next_anggota.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_next_anggota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_next_page_30px_1.png"))); // NOI18N
+        bt_next_anggota.setText("Next");
+        bt_next_anggota.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_next_anggotaMouseClicked(evt);
+            }
+        });
+        panel_dataanggota.add(bt_next_anggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, -1));
+
+        bt_back_anggota.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_back_anggota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_back_to_30px.png"))); // NOI18N
+        bt_back_anggota.setText("Back");
+        bt_back_anggota.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_back_anggotaMouseClicked(evt);
+            }
+        });
+        panel_dataanggota.add(bt_back_anggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, -1, -1));
+
+        jPanel1.add(panel_dataanggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
+
+        panel_datapengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_datapengembalian.add(jDateChooser3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 170, -1));
+
+        jTextField8.setText("jTextField8");
+        panel_datapengembalian.add(jTextField8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 170, -1));
+
+        jTextField9.setText("jTextField9");
+        panel_datapengembalian.add(jTextField9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, 170, -1));
+
+        jTextField10.setText("jTextField10");
+        panel_datapengembalian.add(jTextField10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 170, -1));
+
+        jTextField11.setText("jTextField11");
+        panel_datapengembalian.add(jTextField11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 170, -1));
+
+        jTextField12.setText("jTextField12");
+        panel_datapengembalian.add(jTextField12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 170, -1));
+
+        jTextField13.setText("jTextField13");
+        panel_datapengembalian.add(jTextField13, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 170, -1));
+
+        jLabel40.setText("Kode Buku");
+        panel_datapengembalian.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+
+        jLabel42.setText("Kode Petugas");
+        panel_datapengembalian.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
+
+        jLabel44.setText("Kode Anggota");
+        panel_datapengembalian.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+
+        jLabel45.setText("Tanggal Kembali");
+        panel_datapengembalian.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
+
+        jLabel46.setText("Total Hari");
+        panel_datapengembalian.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
+
+        jLabel47.setText("Denda Per Hari");
+        panel_datapengembalian.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, -1, -1));
+
+        jLabel48.setText("Total Denda");
+        panel_datapengembalian.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
+
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane5.setViewportView(jTable3);
+
+        panel_datapengembalian.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 80, -1, 250));
+
+        bt_back_pengembalian.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_back_pengembalian.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_back_to_30px.png"))); // NOI18N
+        bt_back_pengembalian.setText("Back");
+        bt_back_pengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_back_pengembalianMouseClicked(evt);
+            }
+        });
+        panel_datapengembalian.add(bt_back_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 390, -1, -1));
+
+        jPanel1.add(panel_datapengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -279,29 +920,165 @@ public class dashboard extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
-        System.exit(0);
+         System.exit(0);
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void bt_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_dashboardMouseClicked
+    private void bt_menu_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_dashboardMouseClicked
         // TODO add your handling code here:
-//        panel_table.show();
-//        panel_input.hide();
-//        panel_buku.hide();
-    }//GEN-LAST:event_bt_dashboardMouseClicked
+        panel_dashboard.show();
+        panel_databuku.hide();
 
-    private void bt_inp_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_inp_pinjamMouseClicked
-        // TODO add your handling code here:
-//        panel_table.hide();
-//        panel_input.show();
-//        panel_buku.hide();
-    }//GEN-LAST:event_bt_inp_pinjamMouseClicked
+    }//GEN-LAST:event_bt_menu_dashboardMouseClicked
 
-    private void bt_inp_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_inp_bukuMouseClicked
+    private void bt_menu_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_pinjamMouseClicked
         // TODO add your handling code here:
-//        panel_table.hide();
-//        panel_input.hide();
-//        panel_buku.show();
-    }//GEN-LAST:event_bt_inp_bukuMouseClicked
+
+    }//GEN-LAST:event_bt_menu_pinjamMouseClicked
+
+    private void bt_menu_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_bukuMouseClicked
+        // TODO add your handling code here:
+        panel_dashboard.hide();
+        panel_databuku.show();
+
+    }//GEN-LAST:event_bt_menu_bukuMouseClicked
+
+    private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
+        // TODO add your handling code here:
+            this.dispose();
+            new login().setVisible(true);
+    }//GEN-LAST:event_jLabel18MouseClicked
+
+    private void bt_insert_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_insert_databukuMouseClicked
+        // TODO add your handling code here:
+        try {
+            String judul_buku = inp_judulbuku.getText();
+            String penulis = inp_penulis.getText();
+            String tahun_penerbit = inp_tahunpenerbit.getText();
+            String sql = "SELECT * FROM data_buku ORDER BY kode_buku DESC";
+            rs = con.lihatData(sql);
+            if (rs.next()) {
+                String autokode = rs.getString("kode_buku").substring(2);
+                String B = "" + (Integer.parseInt(autokode) + 1);
+                String Nol = "";
+                if (B.length() == 1) {
+                    Nol = "000";
+                } else if (B.length() == 2) {
+                    Nol = "00";
+                } else if (B.length() == 3) {
+                    Nol = "0";
+                } else if (B.length() == 4) {
+                    Nol = "";
+                }
+                kode_buku = "B" + Nol + B;
+            } else {
+                kode_buku = "B0001";
+            }
+
+            String sql2 = "INSERT INTO `data_buku` (`kode_buku`, `judul_buku`, `penulis`, `tahun_penerbit`, `time_report`) VALUES ('"+kode_buku+"', '"+judul_buku+"', '"+penulis+"', '"+tahun_penerbit+"', current_timestamp());";
+            con.dmlData(sql2);
+
+            inp_penulis.setText("");
+            inp_judulbuku.setText("");
+            inp_tahunpenerbit.setText("");
+            displayTableDataBuku();
+            bookcount();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }//GEN-LAST:event_bt_insert_databukuMouseClicked
+
+    private void bt_delete_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_delete_databukuMouseClicked
+        // TODO add your handling code here:
+        int confirm = JOptionPane.showConfirmDialog(null, "Yakin?");
+        if (confirm == 0) {
+            String sql = "DELETE FROM data_buku WHERE kode_buku='" + kode_buku+"';";
+            con.dmlData(sql);
+
+            displayTableDataBuku();
+        } else {
+            JOptionPane.showMessageDialog(null, "Delete Error");
+        }
+    }//GEN-LAST:event_bt_delete_databukuMouseClicked
+
+    private void bt_edit_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_edit_databukuMouseClicked
+        // TODO add your handling code here:
+            String sqlUpdate = "UPDATE `data_buku` SET `judul_buku` = '"+inp_penulis.getText()+"', `penulis` = '"+inp_penulis.getText()+"', `tahun_penerbit` = '"+inp_tahunpenerbit.getText()+"' WHERE `kode_buku` = '"+kode_buku+"';";
+            con.dmlData(sqlUpdate);
+            displayTableDataBuku();
+    }//GEN-LAST:event_bt_edit_databukuMouseClicked
+
+    private void tabel_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_databukuMouseClicked
+        // TODO add your handling code here:
+        try {
+            DefaultTableModel dt = (DefaultTableModel) tabel_databuku.getModel();
+            int rowId = tabel_databuku.getSelectedRow();
+            kode_buku = dt.getValueAt(rowId, 0).toString();
+            String sql = "SELECT * FROM data_buku WHERE kode_buku='" + kode_buku + "'";
+            rs = con.lihatData(sql);
+            while (rs.next()) {
+                inp_penulis.setText(rs.getString("judul_buku"));
+                inp_penulis.setText(rs.getString("penulis"));
+                inp_tahunpenerbit.setText(rs.getString("tahun_penerbit"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+
+    }//GEN-LAST:event_tabel_databukuMouseClicked
+
+    private void bt_next_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_databukuMouseClicked
+        // TODO add your handling code here:
+        panel_peminjaman.show();
+        panel_dashboard.hide();
+        panel_databuku.hide();
+    }//GEN-LAST:event_bt_next_databukuMouseClicked
+
+    private void bt_back_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_databukuMouseClicked
+        // TODO add your handling code here:
+        panel_peminjaman.hide();
+        panel_dashboard.show();
+        panel_databuku.hide();
+    }//GEN-LAST:event_bt_back_databukuMouseClicked
+
+    private void bt_next_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_peminjamanMouseClicked
+        // TODO add your handling code here:
+         panel_peminjaman.hide();
+        panel_dashboard.hide();
+        panel_databuku.show();
+    }//GEN-LAST:event_bt_next_peminjamanMouseClicked
+
+    private void bt_menu_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_pengembalianMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_menu_pengembalianMouseClicked
+
+    private void bt_menu_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_anggotaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_menu_anggotaMouseClicked
+
+    private void bt_next_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_dashboardMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_next_dashboardMouseClicked
+
+    private void bt_back_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_peminjamanMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_back_peminjamanMouseClicked
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void bt_next_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_anggotaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_next_anggotaMouseClicked
+
+    private void bt_back_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_anggotaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_back_anggotaMouseClicked
+
+    private void bt_back_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_pengembalianMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bt_back_pengembalianMouseClicked
 
     /**
      * @param args the command line arguments
@@ -339,21 +1116,73 @@ public class dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel bt_dashboard;
-    private javax.swing.JPanel bt_inp_buku;
-    private javax.swing.JPanel bt_inp_pinjam;
-    private javax.swing.JPanel bt_log;
+    private javax.swing.JLabel bt_back_anggota;
+    private javax.swing.JLabel bt_back_databuku;
+    private javax.swing.JLabel bt_back_peminjaman;
+    private javax.swing.JLabel bt_back_pengembalian;
+    private javax.swing.JPanel bt_delete_databuku;
+    private javax.swing.JPanel bt_edit_databuku;
+    private javax.swing.JPanel bt_insert_databuku;
+    private javax.swing.JPanel bt_menu_anggota;
+    private javax.swing.JPanel bt_menu_buku;
+    private javax.swing.JPanel bt_menu_dashboard;
+    private javax.swing.JPanel bt_menu_pengembalian;
+    private javax.swing.JPanel bt_menu_pinjam;
+    private javax.swing.JLabel bt_next_anggota;
+    private javax.swing.JLabel bt_next_dashboard;
+    private javax.swing.JLabel bt_next_databuku;
+    private javax.swing.JLabel bt_next_peminjaman;
     private javax.swing.JLabel image_logo;
+    private javax.swing.JTextField inp_judulbuku;
+    private javax.swing.JTextField inp_penulis;
+    private javax.swing.JTextField inp_tahunpenerbit;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private com.toedter.calendar.JDateChooser jDateChooser3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -361,13 +1190,50 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
-    private javax.swing.JLabel logout;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField11;
+    private javax.swing.JTextField jTextField12;
+    private javax.swing.JTextField jTextField13;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
+    public static final javax.swing.JLabel label1 = new javax.swing.JLabel();
+    private javax.swing.JLabel label_anggota;
+    public static final javax.swing.JLabel label_dashboard = new javax.swing.JLabel();
+    private javax.swing.JLabel label_jumlahbuku;
+    private javax.swing.JLabel label_peminjaman;
+    private javax.swing.JLabel label_pengunjung;
+    public static final javax.swing.JLabel label_username = new javax.swing.JLabel();
+    private javax.swing.JPanel logout;
     private javax.swing.JPanel panel_dashboard;
+    private javax.swing.JPanel panel_dataanggota;
+    private javax.swing.JPanel panel_databuku;
+    private javax.swing.JPanel panel_datapengembalian;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_menu;
-    private javax.swing.JLabel role;
+    private javax.swing.JPanel panel_peminjaman;
+    private javax.swing.JTable tabel_databuku;
     private javax.swing.JLabel title;
-    private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

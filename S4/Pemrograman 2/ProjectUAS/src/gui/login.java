@@ -5,6 +5,8 @@
 package gui;
 
 import controller.koneksi;
+import static gui.dashboard.label_dashboard;
+import static gui.dashboard.label_username;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -38,7 +40,6 @@ public class login extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        inp_username = new javax.swing.JTextField();
         ImageIcon icon = new ImageIcon(getClass().getResource("/assets/OIP.jfif"));
         Image img=icon.getImage();
         jDesktopPane1 = new javax.swing.JDesktopPane(){
@@ -203,13 +204,13 @@ public class login extends javax.swing.JFrame {
             koneksi con = new koneksi();
             String username = inp_username.getText();
             String password = new String(inp_password.getPassword());
-            String sql = "SELECT * FROM account WHERE username='"+username+"' AND password='"+password+"'";
+            String sql = "SELECT * FROM data_petugas WHERE username='"+username+"' AND password='"+password+"'";
             rs = con.lihatData(sql);
             if(rs.next()){
                 this.dispose();
                 new dashboard().setVisible(true);
-                String sql2 = "UPDATE `account` SET `status_login`='1' WHERE username='"+username+"'";
-                con.dmlData(sql2);
+                label_username.setText(rs.getString(3));
+                label_dashboard.setText(rs.getString(3));
             }
             else{
                 JOptionPane.showMessageDialog(null, "Username / Password Salah, Silahkan Cek Kembali");
@@ -264,7 +265,7 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JPanel bt_daftar;
     private javax.swing.JPanel bt_login;
     private javax.swing.JPasswordField inp_password;
-    private javax.swing.JTextField inp_username;
+    public static final javax.swing.JTextField inp_username = new javax.swing.JTextField();
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

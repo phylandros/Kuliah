@@ -15,7 +15,8 @@ import java.sql.Statement;
 public class daftar extends javax.swing.JFrame {
     ResultSet rs;
     Statement stmt;
-
+    String kode_petugas, gender;
+    koneksi con = new koneksi();
     
     /**
      * Creates new form daftar
@@ -33,8 +34,7 @@ public class daftar extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField2 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        rb_jenis_kelamin = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         inp_npm = new javax.swing.JTextField();
@@ -53,10 +53,12 @@ public class daftar extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
         inp_password = new javax.swing.JPasswordField();
-
-        jTextField2.setText("jTextField2");
-
-        jLabel5.setText("jLabel5");
+        jLabel9 = new javax.swing.JLabel();
+        inp_notlp = new javax.swing.JTextField();
+        jSeparator5 = new javax.swing.JSeparator();
+        rb_pria = new javax.swing.JRadioButton();
+        rb_wanita = new javax.swing.JRadioButton();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -87,7 +89,7 @@ public class daftar extends javax.swing.JFrame {
         inp_username.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         inp_username.setForeground(new java.awt.Color(255, 255, 255));
         inp_username.setBorder(null);
-        jPanel1.add(inp_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 190, -1));
+        jPanel1.add(inp_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 210, 190, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -102,12 +104,12 @@ public class daftar extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Username");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Password");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, -1, -1));
 
         bt_backdaftar.setBackground(new java.awt.Color(102, 102, 102));
         bt_backdaftar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -124,7 +126,7 @@ public class daftar extends javax.swing.JFrame {
         jLabel7.setText("Back");
         bt_backdaftar.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 90, 30));
 
-        jPanel1.add(bt_backdaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 90, 30));
+        jPanel1.add(bt_backdaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 280, 90, 30));
 
         bt_daftar.setBackground(new java.awt.Color(102, 102, 102));
         bt_daftar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -142,29 +144,60 @@ public class daftar extends javax.swing.JFrame {
         jLabel8.setText("Daftar");
         bt_daftar.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 90, 30));
 
-        jPanel1.add(bt_daftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 220, 90, 30));
+        jPanel1.add(bt_daftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 280, 90, 30));
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 190, -1));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 190, 10));
-        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 190, 10));
-        jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 190, 10));
+        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, 190, 10));
+        jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, 190, 10));
 
         inp_password.setBackground(new java.awt.Color(102, 102, 102));
         inp_password.setForeground(new java.awt.Color(255, 255, 255));
         inp_password.setBorder(null);
-        jPanel1.add(inp_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 190, -1));
+        jPanel1.add(inp_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 240, 190, -1));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Jenis Kelamin");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 20));
+
+        inp_notlp.setBackground(new java.awt.Color(102, 102, 102));
+        inp_notlp.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        inp_notlp.setForeground(new java.awt.Color(255, 255, 255));
+        inp_notlp.setBorder(null);
+        jPanel1.add(inp_notlp, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 190, -1));
+        jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 190, 10));
+
+        rb_pria.setBackground(new java.awt.Color(102, 102, 102));
+        rb_jenis_kelamin.add(rb_pria);
+        rb_pria.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        rb_pria.setForeground(new java.awt.Color(255, 255, 255));
+        rb_pria.setText("Pria");
+        jPanel1.add(rb_pria, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, -1, -1));
+
+        rb_wanita.setBackground(new java.awt.Color(102, 102, 102));
+        rb_jenis_kelamin.add(rb_wanita);
+        rb_wanita.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        rb_wanita.setForeground(new java.awt.Color(255, 255, 255));
+        rb_wanita.setText("Wanita");
+        jPanel1.add(rb_wanita, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 150, -1, -1));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("No. Handphone");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, -1, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -181,19 +214,52 @@ public class daftar extends javax.swing.JFrame {
     private void bt_daftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_daftarMouseClicked
         // TODO add your handling code here:
         try{
-            koneksi con = new koneksi();
-        
-        String npm = inp_npm.getText();
-        String nama = inp_nama.getText();
-        String username = inp_username.getText();
-        String password = new String(inp_password.getPassword());
-        String sql = "INSERT INTO `account` (`npm`, `nama`, `username`, `password`, `status_login`) VALUES ('"+npm+"', '"+nama+"', '"+username+"', '"+password+"', '0');";
-        con.dmlData(sql);     
-        
-        inp_npm.setText("");
-        inp_nama.setText("");
-        inp_username.setText("");
-        inp_password.setText("");
+            String npm = inp_npm.getText();
+            String nama = inp_nama.getText();
+            String username = inp_username.getText();
+            String password = new String(inp_password.getPassword());
+            
+            String sql = "SELECT * FROM data_petugas ORDER BY kode_petugas DESC";
+            rs = con.lihatData(sql);
+            
+            if (rb_pria.isSelected()) {
+                gender = "Pria";
+            }
+            if (rb_wanita.isSelected()) {
+                gender = "Wanita";
+            }
+            
+            String no_telp = inp_notlp.getText();
+            
+            
+            if(rs.next()){
+                String autokode = rs.getString("kode_petugas").substring(2);
+                String P = "" + (Integer.parseInt(autokode) + 1);
+                String Nol = "";
+                if (P.length() == 1) {
+                    Nol = "000";
+                } else if (P.length() == 2) {
+                    Nol = "00";
+                } else if (P.length() == 3) {
+                    Nol = "0";
+                } else if (P.length() == 4) {
+                    Nol = "";
+                }
+                kode_petugas = "P" + Nol + P;
+            } else {
+                kode_petugas = "P0001";
+            }
+            
+            String sql2 = "INSERT INTO `data_petugas` (`kode_petugas`, `npm`, `nama`, `jenis_kelamin`, `no_telp`, `username`, `password`) VALUES ('"+kode_petugas+"', '"+npm+"', '"+nama+"', '"+gender+"', '"+no_telp+"', '"+username+"', '"+password+"');";
+            con.dmlData(sql2);
+
+            inp_npm.setText("");
+            inp_nama.setText("");
+            inp_notlp.setText("");
+            inp_username.setText("");
+            inp_password.setText("");
+            
+            
         
         } catch(Exception e){
             System.out.println("Error : " +e);
@@ -211,7 +277,7 @@ public class daftar extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -239,22 +305,27 @@ public class daftar extends javax.swing.JFrame {
     private javax.swing.JPanel bt_backdaftar;
     private javax.swing.JPanel bt_daftar;
     private javax.swing.JTextField inp_nama;
+    private javax.swing.JTextField inp_notlp;
     private javax.swing.JTextField inp_npm;
     private javax.swing.JPasswordField inp_password;
     private javax.swing.JTextField inp_username;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.ButtonGroup rb_jenis_kelamin;
+    private javax.swing.JRadioButton rb_pria;
+    private javax.swing.JRadioButton rb_wanita;
     // End of variables declaration//GEN-END:variables
 }
