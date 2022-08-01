@@ -38,6 +38,7 @@ public class employee_gui extends javax.swing.JFrame {
         removeTable(tabel_show_emp);
         displayTable();
         AutoCompleteDecorator.decorate(cb_dept);
+        
         initMethod();
     }
 
@@ -300,14 +301,14 @@ public class employee_gui extends javax.swing.JFrame {
 
     private void tabel_show_empMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_show_empMouseClicked
         // TODO add your handling code here:
-        displayTable();
+
         try {
             dt = (DefaultTableModel) jTable1.getModel();
             int rowId = jTable1.getSelectedRow();
             empId = dt.getValueAt(rowId, 0).toString();
             String sql = "SELECT e.id, e.employee_id,e.nama,e.alamat,e.tempat_lahir,e.tanggal_lahir,d.id deptid,d.deptcode\n"
                     + "FROM employees e\n"
-                    + "INNER JOIN departement d\n"
+                    + "INNER JOIN dept d\n"
                     + "on e.dept_id=d.id"
                     + " WHERE e.id=" + empId;
             System.out.println("SQL : " + sql);
@@ -336,8 +337,13 @@ public class employee_gui extends javax.swing.JFrame {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             birth = dateFormat.format(inp_tgl.getDate());
             String sql = "insert into employees(employee_id,nama,tempat_lahir,tanggal_lahir,alamat,dept_id)"
-                    + "VALUES ('" + inp_emid.getText() + "','" + inp_nama.getText() + "','" + inp_tmp.getText() + "' "
-                    + ",STR_TO_DATE('" + birth + "','%d-%m-%Y'),'" + inp_alamat.getText() + "'," + DeptId + ")";
+                    + "VALUES ("
+                    + "'" + inp_emid.getText() + "',"
+                    + "'" + inp_nama.getText() + "',"
+                    + "'" + inp_tmp.getText() + "'"
+                    + ",STR_TO_DATE('" + birth + "','%d-%m-%Y')"
+                    + ",'" + inp_alamat.getText() + "'"
+                    + "," + DeptId + ")";
 
             System.out.println("SQL : " + sql);
             con.dmlData(sql);

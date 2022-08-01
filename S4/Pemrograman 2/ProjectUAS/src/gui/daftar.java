@@ -218,7 +218,7 @@ public class daftar extends javax.swing.JFrame {
             String nama = inp_nama.getText();
             String username = inp_username.getText();
             String password = new String(inp_password.getPassword());
-            
+            String no_telp = inp_notlp.getText();
             String sql = "SELECT * FROM data_petugas ORDER BY kode_petugas DESC";
             rs = con.lihatData(sql);
             
@@ -228,10 +228,7 @@ public class daftar extends javax.swing.JFrame {
             if (rb_wanita.isSelected()) {
                 gender = "Wanita";
             }
-            
-            String no_telp = inp_notlp.getText();
-            
-            
+
             if(rs.next()){
                 String autokode = rs.getString("kode_petugas").substring(2);
                 String P = "" + (Integer.parseInt(autokode) + 1);
