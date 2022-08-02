@@ -225,6 +225,7 @@ public class departement_form extends javax.swing.JFrame {
             System.out.println("SQL : " + sql);
             con.dmlData(sql);            
             displayTable();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error :" + e);
         }

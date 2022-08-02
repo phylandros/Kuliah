@@ -247,7 +247,7 @@ public class daftar extends javax.swing.JFrame {
                 kode_petugas = "P0001";
             }
             
-            String sql2 = "INSERT INTO `data_petugas` (`kode_petugas`, `npm`, `nama`, `jenis_kelamin`, `no_telp`, `username`, `password`) VALUES ('"+kode_petugas+"', '"+npm+"', '"+nama+"', '"+gender+"', '"+no_telp+"', '"+username+"', '"+password+"');";
+            String sql2 = "INSERT INTO `data_petugas` (`kode_petugas`, `npm`, `nama_petugas`, `jenis_kelamin`, `no_telp`, `username`, `password`) VALUES ('"+kode_petugas+"', '"+npm+"', '"+nama+"', '"+gender+"', '"+no_telp+"', '"+username+"', '"+password+"');";
             con.dmlData(sql2);
 
             inp_npm.setText("");

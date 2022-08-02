@@ -24,7 +24,7 @@ public class koneksi {
         }
 
         try {
-            stmt = DriverManager.getConnection("jdbc:mysql://localhost/perpus", "root", "").createStatement();
+            stmt = DriverManager.getConnection("jdbc:mysql://localhost/perpustakaan", "root", "").createStatement();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error koneksi ke database : " + e);
         }

@@ -13,12 +13,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -37,7 +36,7 @@ public class dashboard extends javax.swing.JFrame {
     ResultSet rs;
     Statement stmt;
     String kode_buku, kode_anggota, kode_pengembalian, kode_peminjaman, kode_petugas;
-    String Buku_Kode, Anggota_Kode, Petugas_Kode, gender;
+    String Buku_Kode, Anggota_Kode, Petugas_Kode, gender, Petugas_Kode_Pengembalian;
 
     void removeTable(JTable jt) {
         DefaultTableModel dt = (DefaultTableModel) jt.getModel();
@@ -85,6 +84,16 @@ public class dashboard extends javax.swing.JFrame {
         }
     }
 
+    private static long days(Calendar tanggalAwal, Calendar tanggalAkhir) {
+        long lama = 0;
+        Calendar tanggal = (Calendar) tanggalAwal.clone();
+        while (tanggal.before(tanggalAkhir)) {
+            tanggal.add(Calendar.DAY_OF_MONTH, 1);
+            lama++;
+        }
+        return lama;
+    }
+
     void initMethod() {
         cb_buku_peminjaman.addActionListener(new ActionListener() {
             @Override
@@ -112,6 +121,15 @@ public class dashboard extends javax.swing.JFrame {
                 Petugas_Kode = item_petugas_peminjaman.getId();
             }
         });
+
+        cb_petugas_pengembalian.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                JComboBox jc4 = (JComboBox) arg0.getSource();
+                Item item_petugas_peminjaman = (Item) jc4.getSelectedItem();
+                Petugas_Kode_Pengembalian = item_petugas_peminjaman.getId();
+            }
+        });
     }
 
     public void addAnggota(JComboBox cmb) {
@@ -131,6 +149,8 @@ public class dashboard extends javax.swing.JFrame {
             System.out.println("Error " + e);
         }
     }
+    
+    
 
     public void addPetugas(JComboBox cmb) {
         cmb.removeAllItems();
@@ -140,7 +160,7 @@ public class dashboard extends javax.swing.JFrame {
             String query = "SELECT * FROM data_petugas";
             rs = con.lihatData(query);
             while (rs.next()) {
-                String Txtcmb = rs.getString("nama").trim();
+                String Txtcmb = rs.getString("nama_petugas").trim();
                 String idCmb = rs.getString("kode_petugas");
                 Item comboItem = new Item(idCmb, Txtcmb);
                 cmb.addItem(comboItem);
@@ -209,7 +229,7 @@ public class dashboard extends javax.swing.JFrame {
 
     void displayTablePeminjaman() {
         removeTable(tabel_peminjaman);
-        String sql = "SELECT p.kode_peminjaman, b.judul_buku, a.nama_anggota, pt.nama, p.tanggal_pinjam, p.tanggal_kembali\n"
+        String sql = "SELECT p.kode_peminjaman, b.judul_buku, a.nama_anggota, pt.nama_petugas, p.tanggal_pinjam, p.tanggal_kembali\n"
                 + "FROM data_peminjaman p\n"
                 + "JOIN data_petugas pt ON p.kode_petugas = pt.kode_petugas\n"
                 + "JOIN data_anggota a ON p.kode_anggota = a.kode_anggota\n"
@@ -222,11 +242,36 @@ public class dashboard extends javax.swing.JFrame {
                 kode_peminjaman = rs.getString("kode_peminjaman");
                 String kode_buku = rs.getString("judul_buku");
                 String kode_anggota = rs.getString("nama_anggota");
-                String kode_petugas = rs.getString("nama");
+                String kode_petugas = rs.getString("nama_petugas");
                 String tanggal_pinjam = rs.getString("tanggal_pinjam");
                 String tanggal_kembali = rs.getString("tanggal_kembali");
 
                 rows = new Object[]{kode_peminjaman, kode_buku, kode_anggota, kode_petugas, tanggal_pinjam, tanggal_kembali};
+                dt.addRow(rows);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }
+
+    void displayTablePengembalian() {
+        removeTable(tabel_pengembalian);
+        String sql = "SELECT pg.kode_pengembalian, pg.kode_peminjaman, a.nama_petugas, p.tanggal_kembali, pg.tanggal_kembali_pengembalian , pg.total_hari, pg.denda_perhari,pg.total_denda FROM data_pengembalian pg JOIN data_peminjaman p ON pg.kode_peminjaman = p.kode_peminjaman JOIN data_petugas a ON pg.kode_petugas = a.kode_petugas;";
+        rs = con.lihatData(sql);
+        DefaultTableModel dt = (DefaultTableModel) tabel_pengembalian.getModel();
+        Object rows[];
+        try {
+            while (rs.next()) {
+                kode_pengembalian = rs.getString("kode_pengembalian");
+                kode_peminjaman = rs.getString("kode_peminjaman");
+                String nama_petugas = rs.getString("nama_petugas");
+                String tanggal_kembali = rs.getString("tanggal_kembali");
+                String tanggal_kembali_pengembalian = rs.getString("tanggal_kembali_pengembalian");
+                String total_hari = rs.getString("total_hari");
+                String denda_perhari = rs.getString("denda_perhari");
+                String total_denda = rs.getString("total_denda");
+
+                rows = new Object[]{kode_pengembalian, kode_peminjaman, nama_petugas, tanggal_kembali, tanggal_kembali_pengembalian, total_hari, denda_perhari, total_denda};
                 dt.addRow(rows);
             }
         } catch (Exception e) {
@@ -242,10 +287,52 @@ public class dashboard extends javax.swing.JFrame {
                 int count = rs.getInt("Jumlah_Buku");
                 label_jumlahbuku.setText(String.valueOf(count));
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
         }
     }
+
+    public void anggotacount() {
+        String sql = "SELECT COUNT(*) as Jumlah_Anggota FROM data_anggota;";
+        rs = con.lihatData(sql);
+        try {
+            while (rs.next()) {
+                int count = rs.getInt("Jumlah_Anggota");
+                jumlah_anggota.setText(String.valueOf(count));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }
+    
+    public void peminjamancount() {
+        int count_peminjaman = 0, count_pengembalian=0;
+        
+        String sql = "SELECT COUNT(*) as Jumlah_Peminjaman FROM data_peminjaman;";
+        rs = con.lihatData(sql);
+        try {
+            
+            while (rs.next()) {
+                count_peminjaman = rs.getInt("Jumlah_Peminjaman");
+                
+            }
+            
+            String sql2 = "SELECT COUNT(*) as Jumlah_Pengembalian FROM data_pengembalian;";
+            rs = con.lihatData(sql2);
+            while (rs.next()) {
+                count_pengembalian = rs.getInt("Jumlah_Pengembalian");
+                
+            }
+            
+            int count = count_peminjaman - count_pengembalian;
+            label_peminjaman.setText(String.valueOf(count));
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }
+
+    
 
     /**
      * Creates new form dashboard
@@ -253,25 +340,30 @@ public class dashboard extends javax.swing.JFrame {
     public dashboard() {
         initComponents();
         bookcount();
+        anggotacount();
+        peminjamancount();
         tabel_buku();
         tabel_peminjaman();
         addBuku(cb_buku_peminjaman);
         addAnggota(cb_anggota_peminjaman);
         addPetugas(cb_petugas_peminjaman);
+        addPetugas(cb_petugas_pengembalian);
         removeTable(tabel_databuku);
         removeTable(tabel_peminjaman);
         displayTablePeminjaman();
         displayTableDataBuku();
         displayTableAnggota();
+        initMethod();
+        AutoCompleteDecorator.decorate(cb_buku_peminjaman);
+        AutoCompleteDecorator.decorate(cb_anggota_peminjaman);
+        AutoCompleteDecorator.decorate(cb_petugas_peminjaman);
+        AutoCompleteDecorator.decorate(cb_petugas_pengembalian);
         panel_dashboard.show();
         panel_databuku.hide();
         panel_peminjaman.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
-        initMethod();
-        AutoCompleteDecorator.decorate(cb_buku_peminjaman);
-        AutoCompleteDecorator.decorate(cb_anggota_peminjaman);
-        AutoCompleteDecorator.decorate(cb_petugas_peminjaman);
+        displayTablePengembalian();
     }
 
     /**
@@ -307,7 +399,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_dashboard = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        label_pengunjung = new javax.swing.JLabel();
+        jumlah_anggota = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         label_peminjaman = new javax.swing.JLabel();
@@ -360,8 +452,8 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         tabel_peminjaman = new javax.swing.JTable();
         cb_buku_peminjaman = new javax.swing.JComboBox<>();
-        cb_anggota_peminjaman = new javax.swing.JComboBox<>();
         cb_petugas_peminjaman = new javax.swing.JComboBox<>();
+        cb_anggota_peminjaman = new javax.swing.JComboBox<>();
         panel_dataanggota = new javax.swing.JPanel();
         inp_npm_anggota = new javax.swing.JTextField();
         inp_nama_anggota = new javax.swing.JTextField();
@@ -397,9 +489,6 @@ public class dashboard extends javax.swing.JFrame {
         inp_denda_pengembalian = new javax.swing.JTextField();
         inp_totalhari_pengembalian = new javax.swing.JTextField();
         inp_totaldenda_pengembalian = new javax.swing.JTextField();
-        inp_kodebuku_pengembalian = new javax.swing.JTextField();
-        inp_kodeanggota_pengembalian = new javax.swing.JTextField();
-        inp_kodepetugas_pengembalian = new javax.swing.JTextField();
         jLabel40 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
@@ -412,17 +501,21 @@ public class dashboard extends javax.swing.JFrame {
         tabel_pengembalian = new javax.swing.JTable();
         bt_insert_pengembalian = new javax.swing.JPanel();
         jLabel52 = new javax.swing.JLabel();
-        bt_update_pengembalian = new javax.swing.JPanel();
+        bt_hitung_Pengembalian = new javax.swing.JPanel();
         jLabel53 = new javax.swing.JLabel();
-        bt_delete_pengembalian = new javax.swing.JPanel();
-        jLabel54 = new javax.swing.JLabel();
-        jSeparator11 = new javax.swing.JSeparator();
-        jSeparator12 = new javax.swing.JSeparator();
-        jSeparator13 = new javax.swing.JSeparator();
         jSeparator14 = new javax.swing.JSeparator();
         jSeparator15 = new javax.swing.JSeparator();
         jSeparator16 = new javax.swing.JSeparator();
         jLabel32 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        inp_kode_peminjaman = new javax.swing.JTextField();
+        bt_cari_kode_peminjaman = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
+        jSeparator5 = new javax.swing.JSeparator();
+        jSeparator6 = new javax.swing.JSeparator();
+        tanggal_pinjam_pengembalian = new com.toedter.calendar.JDateChooser();
+        jLabel41 = new javax.swing.JLabel();
+        cb_petugas_pengembalian = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Perpustakaan STMIK BANI SALEH");
@@ -596,11 +689,11 @@ public class dashboard extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_people_30px.png"))); // NOI18N
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        label_pengunjung.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        label_pengunjung.setForeground(new java.awt.Color(255, 255, 255));
-        label_pengunjung.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        label_pengunjung.setText("jLabel19");
-        jPanel2.add(label_pengunjung, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 130, 50));
+        jumlah_anggota.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jumlah_anggota.setForeground(new java.awt.Color(255, 255, 255));
+        jumlah_anggota.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jumlah_anggota.setText("jLabel19");
+        jPanel2.add(jumlah_anggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 130, 50));
 
         panel_dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 180, 50));
 
@@ -686,7 +779,6 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane1.setToolTipText("");
-        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         tabel_databuku.setAutoCreateRowSorter(true);
@@ -717,9 +809,7 @@ public class dashboard extends javax.swing.JFrame {
         tabel_databuku.setGridColor(new java.awt.Color(102, 102, 102));
         tabel_databuku.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_databuku.setRowHeight(30);
-        tabel_databuku.setRowMargin(0);
         tabel_databuku.setShowGrid(true);
-        tabel_databuku.setShowVerticalLines(false);
         tabel_databuku.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_databukuMouseClicked(evt);
@@ -728,7 +818,7 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tabel_databuku);
         if (tabel_databuku.getColumnModel().getColumnCount() > 0) {
             tabel_databuku.getColumnModel().getColumn(0).setResizable(false);
-            tabel_databuku.getColumnModel().getColumn(0).setPreferredWidth(15);
+            tabel_databuku.getColumnModel().getColumn(0).setPreferredWidth(50);
             tabel_databuku.getColumnModel().getColumn(1).setResizable(false);
             tabel_databuku.getColumnModel().getColumn(2).setResizable(false);
             tabel_databuku.getColumnModel().getColumn(3).setResizable(false);
@@ -849,13 +939,13 @@ public class dashboard extends javax.swing.JFrame {
         jLabel25.setText("Tanggal Kembali");
         panel_peminjaman.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
 
-        jLabel27.setText("Kode Buku");
+        jLabel27.setText("Judul Buku");
         panel_peminjaman.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
 
-        jLabel28.setText("Kode Anggota");
+        jLabel28.setText("Nama Anggota");
         panel_peminjaman.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, -1));
 
-        jLabel29.setText("Kode Petugas");
+        jLabel29.setText("Nama Petugas");
         panel_peminjaman.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
 
         bt_insert_peminjaman.setBackground(new java.awt.Color(255, 255, 255));
@@ -924,7 +1014,6 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane6.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane6.setToolTipText("");
-        jScrollPane6.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         tabel_peminjaman.setAutoCreateRowSorter(true);
@@ -956,7 +1045,6 @@ public class dashboard extends javax.swing.JFrame {
         tabel_peminjaman.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_peminjaman.setRowHeight(30);
         tabel_peminjaman.setShowGrid(true);
-        tabel_peminjaman.setShowVerticalLines(false);
         tabel_peminjaman.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_peminjamanMouseClicked(evt);
@@ -975,15 +1063,14 @@ public class dashboard extends javax.swing.JFrame {
         panel_peminjaman.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 500, 320));
 
         cb_buku_peminjaman.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cb_buku_peminjaman.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         cb_buku_peminjaman.setFocusable(false);
         panel_peminjaman.add(cb_buku_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 140, -1));
 
-        cb_anggota_peminjaman.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        panel_peminjaman.add(cb_anggota_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 140, -1));
-
         cb_petugas_peminjaman.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         panel_peminjaman.add(cb_petugas_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 140, -1));
+
+        cb_anggota_peminjaman.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        panel_peminjaman.add(cb_anggota_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 140, -1));
 
         jPanel1.add(panel_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
@@ -1012,7 +1099,6 @@ public class dashboard extends javax.swing.JFrame {
         inp_alamat_anggota.setColumns(20);
         inp_alamat_anggota.setForeground(new java.awt.Color(102, 102, 102));
         inp_alamat_anggota.setRows(5);
-        inp_alamat_anggota.setBorder(null);
         jScrollPane3.setViewportView(inp_alamat_anggota);
 
         panel_dataanggota.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 170, 100));
@@ -1061,7 +1147,6 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane7.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane7.setToolTipText("");
-        jScrollPane7.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         tabel_anggota.setAutoCreateRowSorter(true);
@@ -1093,7 +1178,6 @@ public class dashboard extends javax.swing.JFrame {
         tabel_anggota.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_anggota.setRowHeight(30);
         tabel_anggota.setShowGrid(true);
-        tabel_anggota.setShowVerticalLines(false);
         tabel_anggota.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_anggotaMouseClicked(evt);
@@ -1181,52 +1265,39 @@ public class dashboard extends javax.swing.JFrame {
 
         panel_datapengembalian.setBackground(new java.awt.Color(255, 255, 255));
         panel_datapengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        panel_datapengembalian.add(inp_tanggalkembali_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 160, -1));
+        panel_datapengembalian.add(inp_tanggalkembali_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 210, 160, -1));
 
-        inp_denda_pengembalian.setText("jTextField8");
         inp_denda_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_denda_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 220, 160, -1));
+        panel_datapengembalian.add(inp_denda_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 160, -1));
 
-        inp_totalhari_pengembalian.setText("jTextField9");
+        inp_totalhari_pengembalian.setEditable(false);
         inp_totalhari_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_totalhari_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 160, -1));
+        panel_datapengembalian.add(inp_totalhari_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 240, 160, -1));
 
-        inp_totaldenda_pengembalian.setText("jTextField10");
+        inp_totaldenda_pengembalian.setEditable(false);
         inp_totaldenda_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_totaldenda_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 250, 160, -1));
+        panel_datapengembalian.add(inp_totaldenda_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 160, -1));
 
-        inp_kodebuku_pengembalian.setText("jTextField11");
-        inp_kodebuku_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_kodebuku_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 160, -1));
+        jLabel40.setText("Judul Buku");
+        panel_datapengembalian.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, -1));
 
-        inp_kodeanggota_pengembalian.setText("jTextField12");
-        inp_kodeanggota_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_kodeanggota_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 160, -1));
+        jLabel42.setText("Nama Petugas");
+        panel_datapengembalian.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, -1, -1));
 
-        inp_kodepetugas_pengembalian.setText("jTextField13");
-        inp_kodepetugas_pengembalian.setBorder(null);
-        panel_datapengembalian.add(inp_kodepetugas_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 160, -1));
-
-        jLabel40.setText("Kode Buku");
-        panel_datapengembalian.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
-
-        jLabel42.setText("Kode Petugas");
-        panel_datapengembalian.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
-
-        jLabel44.setText("Kode Anggota");
-        panel_datapengembalian.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
+        jLabel44.setText("Nama Anggota");
+        panel_datapengembalian.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
 
         jLabel45.setText("Tanggal Kembali");
-        panel_datapengembalian.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
+        panel_datapengembalian.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, -1));
 
         jLabel46.setText("Total Hari");
-        panel_datapengembalian.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, -1, -1));
+        panel_datapengembalian.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, -1, -1));
 
         jLabel47.setText("Denda Per Hari");
-        panel_datapengembalian.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
+        panel_datapengembalian.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
 
         jLabel48.setText("Total Denda");
-        panel_datapengembalian.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
+        panel_datapengembalian.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, -1, -1));
 
         bt_back_pengembalian.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bt_back_pengembalian.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_back_to_30px.png"))); // NOI18N
@@ -1241,25 +1312,23 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane8.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane8.setToolTipText("");
-        jScrollPane8.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jScrollPane8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         tabel_pengembalian.setAutoCreateRowSorter(true);
-        tabel_pengembalian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         tabel_pengembalian.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         tabel_pengembalian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nama Buku", "Nama Anggota", "Nama Petugas", "Tanggal kembali", "Total Hari", "Denda Per Hari", "Total Denda"
+                "Kode Pengembalian", "Kode Peminjaman", "Nama Anggota", "Janji Kembali", "Tanggal kembali", "Total Hari", "Denda PerHari", "Total Denda"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1273,7 +1342,6 @@ public class dashboard extends javax.swing.JFrame {
         tabel_pengembalian.setIntercellSpacing(new java.awt.Dimension(0, 0));
         tabel_pengembalian.setRowHeight(30);
         tabel_pengembalian.setShowGrid(true);
-        tabel_pengembalian.setShowVerticalLines(false);
         tabel_pengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_pengembalianMouseClicked(evt);
@@ -1288,65 +1356,92 @@ public class dashboard extends javax.swing.JFrame {
             tabel_pengembalian.getColumnModel().getColumn(4).setResizable(false);
             tabel_pengembalian.getColumnModel().getColumn(5).setResizable(false);
             tabel_pengembalian.getColumnModel().getColumn(6).setResizable(false);
+            tabel_pengembalian.getColumnModel().getColumn(7).setResizable(false);
         }
 
         panel_datapengembalian.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 490, 320));
 
         bt_insert_pengembalian.setBackground(new java.awt.Color(255, 255, 255));
         bt_insert_pengembalian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        bt_insert_pengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_insert_pengembalianMouseClicked(evt);
+            }
+        });
         bt_insert_pengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel52.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel52.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel52.setText("Insert");
-        bt_insert_pengembalian.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 70, 30));
+        bt_insert_pengembalian.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 60, 30));
 
-        panel_datapengembalian.add(bt_insert_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 70, 30));
+        panel_datapengembalian.add(bt_insert_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 330, 60, 30));
 
-        bt_update_pengembalian.setBackground(new java.awt.Color(255, 255, 255));
-        bt_update_pengembalian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        bt_update_pengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        bt_hitung_Pengembalian.setBackground(new java.awt.Color(255, 255, 255));
+        bt_hitung_Pengembalian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        bt_hitung_Pengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_hitung_PengembalianMouseClicked(evt);
+            }
+        });
+        bt_hitung_Pengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel53.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel53.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel53.setText("Update");
-        bt_update_pengembalian.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
+        jLabel53.setText("Hitung");
+        bt_hitung_Pengembalian.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 60, 30));
 
-        panel_datapengembalian.add(bt_update_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 70, 30));
-
-        bt_delete_pengembalian.setBackground(new java.awt.Color(255, 255, 255));
-        bt_delete_pengembalian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        bt_delete_pengembalian.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel54.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel54.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel54.setText("Delete");
-        bt_delete_pengembalian.add(jLabel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 30));
-
-        panel_datapengembalian.add(bt_delete_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 70, 30));
-
-        jSeparator11.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 160, 10));
-
-        jSeparator12.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator12, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 160, 10));
-
-        jSeparator13.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator13, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 160, 10));
+        panel_datapengembalian.add(bt_hitung_Pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 330, 60, 30));
 
         jSeparator14.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 210, 160, 10));
+        panel_datapengembalian.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 260, 160, 10));
 
         jSeparator15.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 240, 160, 10));
+        panel_datapengembalian.add(jSeparator15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 290, 160, 10));
 
         jSeparator16.setForeground(new java.awt.Color(102, 102, 102));
-        panel_datapengembalian.add(jSeparator16, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 160, 10));
+        panel_datapengembalian.add(jSeparator16, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 320, 160, 10));
 
         jLabel32.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel32.setText("DATA PENGEMBALIAN");
         panel_datapengembalian.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 480, -1));
+
+        jLabel2.setText("Kode Peminjaman");
+        panel_datapengembalian.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+
+        inp_namaanggota_pegembalian.setEditable(false);
+        inp_namaanggota_pegembalian.setBorder(null);
+        panel_datapengembalian.add(inp_namaanggota_pegembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 160, -1));
+
+        inp_judul_pengembalian.setEditable(false);
+        inp_judul_pengembalian.setBorder(null);
+        panel_datapengembalian.add(inp_judul_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 160, -1));
+        panel_datapengembalian.add(inp_kode_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 120, -1));
+
+        bt_cari_kode_peminjaman.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bt_cari_kode_peminjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_search_15px_2.png"))); // NOI18N
+        bt_cari_kode_peminjaman.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(120, 120, 120)));
+        bt_cari_kode_peminjaman.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_cari_kode_peminjamanMouseClicked(evt);
+            }
+        });
+        panel_datapengembalian.add(bt_cari_kode_peminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, 30, 20));
+
+        jSeparator4.setForeground(new java.awt.Color(120, 120, 120));
+        panel_datapengembalian.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 120, 10));
+        panel_datapengembalian.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 160, 10));
+        panel_datapengembalian.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 160, 10));
+
+        tanggal_pinjam_pengembalian.setEnabled(false);
+        panel_datapengembalian.add(tanggal_pinjam_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, 160, -1));
+
+        jLabel41.setText("Tgl Janji Kembali");
+        panel_datapengembalian.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
+
+        cb_petugas_pengembalian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        panel_datapengembalian.add(cb_petugas_pengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 160, -1));
 
         jPanel1.add(panel_datapengembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 220, 800, 420));
 
@@ -1388,6 +1483,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
 
+
     }//GEN-LAST:event_bt_menu_pinjamMouseClicked
 
     private void bt_menu_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_bukuMouseClicked
@@ -1397,6 +1493,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_peminjaman.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
 
     }//GEN-LAST:event_bt_menu_bukuMouseClicked
 
@@ -1453,8 +1550,10 @@ public class dashboard extends javax.swing.JFrame {
             String sql = "DELETE FROM data_buku WHERE kode_buku='" + kode_buku + "';";
             con.dmlData(sql);
             displayTableDataBuku();
+            bookcount();
+
         } else {
-            JOptionPane.showMessageDialog(null, "Delete Error");
+            JOptionPane.showMessageDialog(null, "Delete Batal");
         }
     }//GEN-LAST:event_bt_delete_databukuMouseClicked
 
@@ -1463,6 +1562,7 @@ public class dashboard extends javax.swing.JFrame {
         String sqlUpdate = "UPDATE `data_buku` SET `judul_buku` = '" + inp_judulbuku.getText() + "', `penulis` = '" + inp_penulis.getText() + "', `tahun_penerbit` = '" + inp_tahunpenerbit.getText() + "' WHERE `kode_buku` = '" + kode_buku + "';";
         con.dmlData(sqlUpdate);
         displayTableDataBuku();
+        bookcount();
     }//GEN-LAST:event_bt_update_databukuMouseClicked
 
     private void tabel_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_databukuMouseClicked
@@ -1478,6 +1578,8 @@ public class dashboard extends javax.swing.JFrame {
                 inp_penulis.setText(rs.getString("penulis"));
                 inp_tahunpenerbit.setText(rs.getString("tahun_penerbit"));
             }
+            bookcount();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error : " + e);
         }
@@ -1491,6 +1593,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_peminjaman.hide();
         panel_dataanggota.show();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_next_databukuMouseClicked
 
     private void bt_back_databukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_databukuMouseClicked
@@ -1500,6 +1603,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_back_databukuMouseClicked
 
     private void bt_next_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_peminjamanMouseClicked
@@ -1509,6 +1613,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.show();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_next_peminjamanMouseClicked
 
     private void bt_menu_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_menu_pengembalianMouseClicked
@@ -1527,6 +1632,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_peminjaman.hide();
         panel_dataanggota.show();
         panel_datapengembalian.hide();
+        
     }//GEN-LAST:event_bt_menu_anggotaMouseClicked
 
     private void bt_next_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_dashboardMouseClicked
@@ -1536,6 +1642,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_next_dashboardMouseClicked
 
     private void bt_back_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_peminjamanMouseClicked
@@ -1545,6 +1652,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_back_peminjamanMouseClicked
 
     private void bt_next_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_next_anggotaMouseClicked
@@ -1554,6 +1662,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.hide();
         panel_dataanggota.hide();
         panel_datapengembalian.show();
+
     }//GEN-LAST:event_bt_next_anggotaMouseClicked
 
     private void bt_back_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_anggotaMouseClicked
@@ -1563,6 +1672,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.show();
         panel_dataanggota.hide();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_back_anggotaMouseClicked
 
     private void bt_back_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_back_pengembalianMouseClicked
@@ -1572,6 +1682,7 @@ public class dashboard extends javax.swing.JFrame {
         panel_databuku.hide();
         panel_dataanggota.show();
         panel_datapengembalian.hide();
+
     }//GEN-LAST:event_bt_back_pengembalianMouseClicked
 
     private void tabel_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_peminjamanMouseClicked
@@ -1580,7 +1691,7 @@ public class dashboard extends javax.swing.JFrame {
             DefaultTableModel dt = (DefaultTableModel) tabel_peminjaman.getModel();
             int rowId = tabel_peminjaman.getSelectedRow();
             kode_peminjaman = dt.getValueAt(rowId, 0).toString();
-            String sql = "SELECT p.kode_peminjaman,b.kode_buku, b.judul_buku, a.kode_anggota, a.nama_anggota, pt.kode_petugas, pt.nama, p.tanggal_pinjam, p.tanggal_kembali\n"
+            String sql = "SELECT p.kode_peminjaman,b.kode_buku, b.judul_buku, a.kode_anggota, a.nama_anggota, pt.kode_petugas, pt.nama_petugas, p.tanggal_pinjam, p.tanggal_kembali\n"
                     + "FROM data_peminjaman p\n"
                     + "JOIN data_petugas pt ON p.kode_petugas = pt.kode_petugas\n"
                     + "JOIN data_anggota a ON p.kode_anggota = a.kode_anggota\n"
@@ -1609,6 +1720,8 @@ public class dashboard extends javax.swing.JFrame {
                 Date tanggal_kembali = new SimpleDateFormat("yyyy-MM-dd").parse((String) rs.getString("tanggal_kembali"));
                 inp_tgl_kembali.setDate(tanggal_kembali);
             }
+
+            peminjamancount();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error : " + e);
         }
@@ -1623,7 +1736,7 @@ public class dashboard extends javax.swing.JFrame {
             String sql = "SELECT * FROM data_anggota WHERE kode_anggota='" + kode_anggota + "'";
             rs = con.lihatData(sql);
             while (rs.next()) {
-                
+
                 inp_npm_anggota.setText(rs.getString("npm_anggota"));
                 inp_nama_anggota.setText(rs.getString("nama_anggota"));
                 String gender = rs.getString("jenis_kelamin_anggota");
@@ -1637,6 +1750,9 @@ public class dashboard extends javax.swing.JFrame {
                 inp_alamat_anggota.setText(rs.getString("alamat_anggota"));
                 inp_notlp_anggota.setText(rs.getString("no_hp_anggota"));
             }
+
+            anggotacount();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error : " + e);
         }
@@ -1683,6 +1799,7 @@ public class dashboard extends javax.swing.JFrame {
 
             displayTablePeminjaman();
 
+            peminjamancount();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error : " + e);
         }
@@ -1702,6 +1819,7 @@ public class dashboard extends javax.swing.JFrame {
                 + "WHERE kode_peminjaman ='" + kode_peminjaman + "';";
         con.dmlData(query);
         displayTablePeminjaman();
+        peminjamancount();
     }//GEN-LAST:event_bt_update_peminjamanMouseClicked
 
     private void bt_delete_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_delete_peminjamanMouseClicked
@@ -1713,8 +1831,9 @@ public class dashboard extends javax.swing.JFrame {
             con.dmlData(sql);
 
             displayTablePeminjaman();
+            peminjamancount();
         } else {
-            JOptionPane.showMessageDialog(null, "Delete Error");
+            JOptionPane.showMessageDialog(null, "Delete Batal");
         }
     }//GEN-LAST:event_bt_delete_peminjamanMouseClicked
 
@@ -1771,26 +1890,29 @@ public class dashboard extends javax.swing.JFrame {
             inp_alamat_anggota.setText("");
             inp_notlp_anggota.setText("");
             displayTableAnggota();
-
+            anggotacount();
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error : " + e);
         }
+        
     }//GEN-LAST:event_bt_insert_anggotaMouseClicked
 
     private void bt_update_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_update_anggotaMouseClicked
         // TODO add your handling code here:
         String sqlUpdate = "UPDATE `data_anggota` SET "
-                + "`npm_anggota`='"+inp_npm_anggota.getText()+"',"
-                + "`nama_anggota`='"+inp_nama_anggota.getText()+"',"
-                + "`jenis_kelamin_anggota`='"+gender+"',"
-                + "`jurusan_anggota`='"+inp_jurusan_anggota.getText()+"',"
-                + "`alamat_anggota`='"+inp_alamat_anggota.getText()+"',"
-                + "`no_hp_anggota`='"+inp_notlp_anggota.getText()+"'"
-                + " WHERE `kode_anggota` = '"+kode_anggota+"';";
-      
+                + "`npm_anggota`='" + inp_npm_anggota.getText() + "',"
+                + "`nama_anggota`='" + inp_nama_anggota.getText() + "',"
+                + "`jenis_kelamin_anggota`='" + gender + "',"
+                + "`jurusan_anggota`='" + inp_jurusan_anggota.getText() + "',"
+                + "`alamat_anggota`='" + inp_alamat_anggota.getText() + "',"
+                + "`no_hp_anggota`='" + inp_notlp_anggota.getText() + "'"
+                + " WHERE `kode_anggota` = '" + kode_anggota + "';";
+
         con.dmlData(sqlUpdate);
         displayTableAnggota();
-        
+        anggotacount();
+
     }//GEN-LAST:event_bt_update_anggotaMouseClicked
 
     private void bt_delete_anggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_delete_anggotaMouseClicked
@@ -1800,10 +1922,118 @@ public class dashboard extends javax.swing.JFrame {
             String sql = "DELETE FROM data_anggota WHERE kode_anggota='" + kode_anggota + "';";
             con.dmlData(sql);
             displayTableAnggota();
+            anggotacount();
         } else {
-            JOptionPane.showMessageDialog(null, "Delete Error");
+            JOptionPane.showMessageDialog(null, "Delete Batal");
         }
     }//GEN-LAST:event_bt_delete_anggotaMouseClicked
+
+    private void bt_cari_kode_peminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_cari_kode_peminjamanMouseClicked
+        // TODO add your handling code here:
+        try {
+            cari_kode_peminjaman popup = new cari_kode_peminjaman(this, rootPaneCheckingEnabled);
+            popup.setLocationRelativeTo(null);
+            popup.setVisible(true);
+            String y = popup.AmbilText();
+            String sqlCari = "SELECT p.kode_peminjaman,b.judul_buku,a.nama_anggota,p.tanggal_kembali FROM data_peminjaman p JOIN data_buku b ON p.kode_buku = b.kode_buku JOIN data_anggota a ON p.kode_anggota = a.kode_anggota WHERE kode_peminjaman='" + y + "';";
+            rs = con.lihatData(sqlCari);
+            while (rs.next()) {
+                inp_judul_pengembalian.setText(rs.getString("judul_buku"));
+                inp_namaanggota_pegembalian.setText(rs.getString("nama_anggota"));
+                inp_kode_peminjaman.setText(rs.getString("kode_peminjaman"));
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String tanggal_pinjam = dateFormat.format(rs.getDate("tanggal_kembali"));
+                DateFormat dateAwal = new SimpleDateFormat("dd/MM/yyyy");
+                Date tglAwal = dateAwal.parse(tanggal_pinjam);
+                Date TGLAwal = tglAwal;
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(TGLAwal);
+
+                tanggal_pinjam_pengembalian.setDate(TGLAwal);
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : "+ e);
+        }
+
+    }//GEN-LAST:event_bt_cari_kode_peminjamanMouseClicked
+
+    private void bt_hitung_PengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_hitung_PengembalianMouseClicked
+        // TODO add your handling code here:
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String tanggal_pinjam = dateFormat.format(tanggal_pinjam_pengembalian.getDate());
+            String tanggal_kembali = dateFormat.format(inp_tanggalkembali_pengembalian.getDate());
+            DateFormat dateAwal = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat dateAkhir = new SimpleDateFormat("dd/MM/yyyy");
+
+            Date tglAwal = dateAwal.parse(tanggal_pinjam);
+            Date TGLAwal = tglAwal;
+            Date tglAkhir = dateAkhir.parse(tanggal_kembali);
+            Date TGLAkhir = tglAkhir;
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(TGLAwal);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(TGLAkhir);
+            String hasil = String.valueOf(days(cal1, cal2));
+            inp_totalhari_pengembalian.setText(hasil);
+
+            int total_denda = Integer.parseInt(inp_denda_pengembalian.getText()) * Integer.parseInt(hasil);
+            inp_totaldenda_pengembalian.setText(String.valueOf(total_denda));
+        } catch (Exception e) {
+
+        }
+    }//GEN-LAST:event_bt_hitung_PengembalianMouseClicked
+
+    private void bt_insert_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_insert_pengembalianMouseClicked
+        // TODO add your handling code here:
+        try {
+            String kode_peminjaman = inp_kode_peminjaman.getText();
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            String tanggal_kembali = dateFormat.format(inp_tanggalkembali_pengembalian.getDate());
+
+            String denda_perhari = inp_denda_pengembalian.getText();
+            String total_hari = inp_totalhari_pengembalian.getText();
+            String total_denda = inp_totaldenda_pengembalian.getText();
+
+            String sql = "SELECT * FROM data_pengembalian ORDER BY kode_pengembalian DESC";
+            rs = con.lihatData(sql);
+
+            if (rs.next()) {
+                String autokode = rs.getString("kode_pengembalian").substring(2);
+                String PG = "" + (Integer.parseInt(autokode) + 1);
+                String Nol = "";
+                if (PG.length() == 1) {
+                    Nol = "00";
+                } else if (PG.length() == 2) {
+                    Nol = "0";
+                } else if (PG.length() == 3) {
+                    Nol = "";
+                }
+
+                kode_pengembalian = "PG" + Nol + PG;
+            } else {
+                kode_pengembalian = "PG001";
+            }
+
+            String sql2 = "INSERT INTO `data_pengembalian` (`kode_pengembalian`, `kode_peminjaman`, `kode_petugas`, `tanggal_kembali_pengembalian`, `denda_perhari`, `total_hari`, `total_denda`, `time_report`) "
+                    + "VALUES ("
+                    + "'" + kode_pengembalian + "', "
+                    + "'" + kode_peminjaman + "', "
+                    + "'" + Petugas_Kode_Pengembalian + "', "
+                    + "STR_TO_DATE('" + tanggal_kembali + "','%d-%m-%Y'),"
+                    + "'" + denda_perhari + "', "
+                    + "'" + total_hari + "', "
+                    + "'" + total_denda + "', "
+                    + "current_timestamp());";
+
+            con.dmlData(sql2);
+            displayTablePengembalian();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error : " + e);
+        }
+    }//GEN-LAST:event_bt_insert_pengembalianMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1845,11 +2075,12 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel bt_back_databuku;
     private javax.swing.JLabel bt_back_peminjaman;
     private javax.swing.JLabel bt_back_pengembalian;
+    private javax.swing.JLabel bt_cari_kode_peminjaman;
     private javax.swing.JPanel bt_delete_anggota;
     private javax.swing.JPanel bt_delete_databuku;
     private javax.swing.JPanel bt_delete_peminjaman;
-    private javax.swing.JPanel bt_delete_pengembalian;
     private javax.swing.JLabel bt_exit;
+    private javax.swing.JPanel bt_hitung_Pengembalian;
     private javax.swing.JPanel bt_insert_anggota;
     private javax.swing.JPanel bt_insert_databuku;
     private javax.swing.JPanel bt_insert_peminjaman;
@@ -1867,19 +2098,19 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel bt_update_anggota;
     private javax.swing.JPanel bt_update_databuku;
     private javax.swing.JPanel bt_update_peminjaman;
-    private javax.swing.JPanel bt_update_pengembalian;
     private javax.swing.JComboBox<String> cb_anggota_peminjaman;
     private javax.swing.JComboBox<String> cb_buku_peminjaman;
     private javax.swing.JComboBox<String> cb_petugas_peminjaman;
+    private javax.swing.JComboBox<String> cb_petugas_pengembalian;
     private javax.swing.JLabel image_logo;
     private javax.swing.JTextArea inp_alamat_anggota;
     private javax.swing.JTextField inp_denda_pengembalian;
+    public static final javax.swing.JTextField inp_judul_pengembalian = new javax.swing.JTextField();
     private javax.swing.JTextField inp_judulbuku;
     private javax.swing.JTextField inp_jurusan_anggota;
-    private javax.swing.JTextField inp_kodeanggota_pengembalian;
-    private javax.swing.JTextField inp_kodebuku_pengembalian;
-    private javax.swing.JTextField inp_kodepetugas_pengembalian;
+    private javax.swing.JTextField inp_kode_peminjaman;
     private javax.swing.JTextField inp_nama_anggota;
+    public static final javax.swing.JTextField inp_namaanggota_pegembalian = new javax.swing.JTextField();
     private javax.swing.JTextField inp_notlp_anggota;
     private javax.swing.JTextField inp_npm_anggota;
     private javax.swing.JTextField inp_penulis;
@@ -1899,6 +2130,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1922,6 +2154,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
@@ -1934,7 +2167,6 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -1950,24 +2182,24 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
-    private javax.swing.JSeparator jSeparator11;
-    private javax.swing.JSeparator jSeparator12;
-    private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
     private javax.swing.JSeparator jSeparator15;
     private javax.swing.JSeparator jSeparator16;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.ButtonGroup jenis_kelamin;
+    private javax.swing.JLabel jumlah_anggota;
     public static final javax.swing.JLabel label1 = new javax.swing.JLabel();
     private javax.swing.JLabel label_anggota;
     public static final javax.swing.JLabel label_dashboard = new javax.swing.JLabel();
     private javax.swing.JLabel label_jumlahbuku;
     private javax.swing.JLabel label_peminjaman;
-    private javax.swing.JLabel label_pengunjung;
     public static final javax.swing.JLabel label_username = new javax.swing.JLabel();
     private javax.swing.JPanel logout;
     private javax.swing.JPanel panel_dashboard;
@@ -1983,6 +2215,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JTable tabel_databuku;
     private javax.swing.JTable tabel_peminjaman;
     private javax.swing.JTable tabel_pengembalian;
+    private com.toedter.calendar.JDateChooser tanggal_pinjam_pengembalian;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }
